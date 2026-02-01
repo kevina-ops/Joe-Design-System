@@ -1,15 +1,10 @@
-import type { Config } from 'tailwindcss';
-import joeTheme from './tokens/output/tailwind/theme.cjs';
-
 /**
- * Tailwind CSS Configuration
- * 
- * Part of PRD Section 5: Tailwind Integration
- * 
- * Imports the generated theme from joe-tokens.json and extends Tailwind's default theme.
+ * Tailwind config in CJS for environments that don't load .ts (e.g. Storybook PostCSS).
+ * Kept in sync with tailwind.config.ts.
  */
+const joeTheme = require('./tokens/output/tailwind/theme.cjs');
 
-const config: Config = {
+module.exports = {
   content: [
     './app/**/*.{ts,tsx,js,jsx}',
     './src/**/*.{ts,tsx,js,jsx}',
@@ -21,7 +16,6 @@ const config: Config = {
       ...joeTheme,
       colors: {
         ...(joeTheme.colors || {}),
-        /* ShadCN-style semantic names for Button etc. (values from globals.css :root) */
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         primary: 'var(--primary)',
@@ -43,5 +37,3 @@ const config: Config = {
   },
   plugins: [],
 };
-
-export default config;

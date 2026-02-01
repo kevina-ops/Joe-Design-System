@@ -5,9 +5,33 @@
  * 
  * Imports the generated CSS variables from joe-tokens.json
  * and includes Tailwind's base, components, and utilities.
+ * 
+ * ShadCN-style semantic variables (--primary, --destructive, etc.) are
+ * mapped from Joe tokens so Button and other components can use
+ * default ShadCN class names; values can be changed later for brand identity.
  */
 
 @import "../tokens/output/css/variables.css";
+
+/* ShadCN-style semantic variables (values from Joe design tokens) */
+:root {
+  --background: var(--joe-semantic-color-background-default);
+  --foreground: var(--joe-semantic-color-text-primary);
+  --primary: var(--joe-semantic-color-action-primary);
+  --primary-foreground: var(--joe-semantic-color-text-inverse);
+  --secondary: var(--joe-semantic-color-action-secondary);
+  --secondary-foreground: var(--joe-semantic-color-text-primary);
+  --destructive: var(--joe-semantic-color-action-destructive);
+  --destructive-foreground: var(--joe-semantic-color-text-inverse);
+  --accent: var(--joe-semantic-color-action-ghostHover);
+  --accent-foreground: var(--joe-semantic-color-text-primary);
+  --muted: var(--joe-primitives-colors-grey-100);
+  --muted-foreground: var(--joe-semantic-color-text-secondary);
+  --border: var(--joe-semantic-color-border-default);
+  --input: var(--joe-semantic-color-border-default);
+  --ring: var(--joe-semantic-color-border-focus);
+  --radius: 0.5rem; /* from Joe radius.m */
+}
 
 @tailwind base;
 @tailwind components;

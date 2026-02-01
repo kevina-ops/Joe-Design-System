@@ -2,6 +2,8 @@
 
 This folder is the **single source of truth** for design tokens. The repo uses a minimal starter set so the team can grow the design system from scratch (per the plan in `.cursorrules`).
 
+Generated output is used by: **Next.js** and **Storybook** (Tailwind theme), and by **`app/globals.css`** (CSS variables and ShadCN-style semantic variables for the Button and other components).
+
 ## Files
 
 | File | Role |
@@ -66,4 +68,4 @@ After any change to `joe-tokens.json`, run `npm run tokens:build` (or rely on CI
 - **Semantic**: Add under `semantic.color` (or other semantic groups the script supports). Prefer referencing primitives, e.g. `"value": "{primitives.colors.blue.500}"`.
 - **New categories**: If you add new top-level sections (e.g. `semantic.shadow`), you may need to extend `scripts/build-tokens.mjs` to emit CSS and/or Tailwind for them.
 
-The current minimal set covers: Button (primary, secondary, outline, ghost, destructive), Input, Card, Badge, and Alert, as per the design system PRD.
+The current set covers: **Button** (primary grey-800/900, secondary, outline, ghost, destructive), and the semantic color/space/typography/radius tokens used by the UI components and `app/globals.css`. It can be extended for Input, Card, Badge, Alert, etc. as needed.
