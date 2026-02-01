@@ -9,8 +9,8 @@ Generated output is used by: **Next.js** and **Storybook**, and by **`app/global
 | File | Role |
 |------|------|
 | `joe-tokens.json` | Source tokens. Edited by designers/devs or synced from Figma (e.g. Token Studio). |
-| `output/css/variables.css` | Generated CSS custom properties (do not edit). |
-| `output/tailwind/theme.cjs` | Generated Tailwind theme (do not edit). |
+| `output/css/variables.css` | Generated CSS custom properties (DO NOT EDIT THIS!!). |
+| `output/tailwind/theme.cjs` | Generated Tailwind theme (DO NOT EDIT THIS!!!). |
 
 Generated files are produced by `npm run tokens:build` (see `scripts/build-tokens.mjs`).
 
@@ -69,3 +69,4 @@ After any change to `joe-tokens.json`, run `npm run tokens:build` (or rely on CI
 - **New categories**: If you add new top-level sections (e.g. `semantic.shadow`), you may need to extend `scripts/build-tokens.mjs` to emit CSS and/or Tailwind for them.
 
 The current set covers: **Button** (primary, secondary, outline, ghost, destructive, icon), and the semantic color/space/typography/radius tokens used by the UI components and `app/globals.css`. It can be extended for Input, Card, Badge, Alert, etc. as needed.
+

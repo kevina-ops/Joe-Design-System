@@ -160,7 +160,23 @@ function flattenTokens(tokens, prefix = '', result = {}) {
 }
 
 /**
- * Generates CSS variables file
+ * Category config for Storybook Design Token addon.
+ * Addon only includes CSS files that contain "@tokens"; categories are parsed from
+ * /* @tokens CategoryName *\/ and /* @tokens-end *\/ comments.
+ */
+const CSS_TOKEN_CATEGORIES = [
+  { prefix: 'primitives.colors', name: 'Colors - Primitives', presenter: 'Color' },
+  { prefix: 'semantic.color', name: 'Colors - Semantic', presenter: 'Color' },
+  { prefix: 'primitives.space', name: 'Spacing', presenter: 'Spacing' },
+  { prefix: 'primitives.radii', name: 'Border Radius', presenter: 'BorderRadius' },
+  { prefix: 'primitives.fontSizes', name: 'Font Size', presenter: 'FontSize' },
+  { prefix: 'primitives.fontWeights', name: 'Font Weight', presenter: 'FontWeight' },
+  { prefix: 'primitives.lineHeights', name: 'Line Height', presenter: 'LineHeight' },
+  { prefix: 'primitives.fonts', name: 'Font Family', presenter: 'FontFamily' },
+];
+
+/**
+ * Generates CSS variables file with @tokens comments for storybook-design-token addon.
  */
 function generateCSSVariables(resolvedTokens) {
   const flatTokens = flattenTokens(resolvedTokens);
@@ -168,23 +184,25 @@ function generateCSSVariables(resolvedTokens) {
   
   cssVars.push(':root {');
   
-  // Sort tokens for consistent output
   const sortedPaths = Object.keys(flatTokens).sort();
   
-  for (const tokenPath of sortedPaths) {
-    const value = flatTokens[tokenPath];
-    const cssVarName = tokenPathToCSSVar(tokenPath);
-    
-    // Handle different value types
-    let cssValue = value;
-    if (typeof value === 'number') {
-      cssValue = value.toString();
-    } else if (typeof value === 'string') {
-      // Keep string values as-is (colors, sizes, etc.)
-      cssValue = value;
+  for (const category of CSS_TOKEN_CATEGORIES) {
+    const pathsInCategory = sortedPaths.filter((p) => p === category.prefix || p.startsWith(category.prefix + '.'));
+    if (pathsInCategory.length === 0) continue;
+
+    cssVars.push(`  /* @tokens ${category.name} @presenter ${category.presenter} */`);
+    for (const tokenPath of pathsInCategory) {
+      const value = flatTokens[tokenPath];
+      const cssVarName = tokenPathToCSSVar(tokenPath);
+      let cssValue = value;
+      if (typeof value === 'number') {
+        cssValue = value.toString();
+      } else if (typeof value === 'string') {
+        cssValue = value;
+      }
+      cssVars.push(`  ${cssVarName}: ${cssValue};`);
     }
-    
-    cssVars.push(`  ${cssVarName}: ${cssValue};`);
+    cssVars.push('  /* @tokens-end */');
   }
   
   cssVars.push('}');
