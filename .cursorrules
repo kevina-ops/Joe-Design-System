@@ -1,0 +1,274 @@
+## Project: Joe Design System – Token‑Driven Component Library
+
+### 1. Goal
+
+Build a token-driven React design system for Joe using Tailwind, shadcn/ui, CVA, Storybook, Chromatic, and Phosphor Icons, with `tokens/joe-tokens.json` as the single source of truth for all styles.
+
+The design system must:
+
+- Consume `tokens/joe-tokens.json` and generate:
+    - CSS custom properties (for theming and Storybook).
+    - Tailwind configuration (for utility classes).
+- Expose a set of reusable, accessible React components (based on shadcn/ui + CVA).
+- Document all components and tokens in Storybook and set up Chromatic for visual regression.
+
+***
+
+### 2. Existing Assets
+
+- Repository: `kevina-ops/Joe-Design-System` (Cursor should open this repo).
+- Token file: `tokens/joe-tokens.json` (current design tokens – treat as source-of-truth, not legacy).
+- Planned stack:
+    - React (preferably Next.js) + Tailwind CSS.
+    - shadcn/ui components.
+    - Class Variance Authority (CVA) for variants.
+    - Storybook.
+    - Chromatic.
+    - Phosphor Icons.
+
+***
+
+### 3. Architecture Requirements
+
+#### 3.1 File/Folder Structure
+
+Cursor should organize or adjust the project toward this structure (respecting anything that already exists):
+
+```text
+.
+├── tokens/
+│   ├── joe-tokens.json          # Source tokens (existing)
+│   └── output/
+│       ├── css/
+│       │   └── variables.css    # Generated CSS vars
+│       └── tailwind/
+│           └── theme.cjs        # Generated Tailwind theme object
+├── src/ or app/
+│   ├── components/
+│   │   └── ui/                  # shadcn-based components
+│   └── lib/
+│       └── utils.ts             # cn() helper, etc.
+├── .storybook/
+│   ├── main.ts
+│   ├── preview.ts
+│   └── design-tokens.ts         # Storybook design-token mapping
+├── .github/
+│   └── workflows/
+│       ├── tokens-sync.yml
+│       └── chromatic.yml
+└── package.json
+```
+
+If the repo uses a slightly different structure, adapt paths but keep the same concepts.
+
+***
+
+### 4. Token Pipeline – Implementation Tasks
+
+**Objective:** Turn `tokens/joe-tokens.json` into build-time artifacts for CSS variables and Tailwind theme configuration using `token-transformer` + `style-dictionary` (or another small script pipeline with equivalent behavior).
+
+#### 4.1 Dependencies
+
+Cursor should ensure these dev dependencies exist (adding them if missing):
+
+- `style-dictionary`
+- `token-transformer`
+- `class-variance-authority`
+- `clsx`
+- `tailwind-merge`
+- `@storybook/react` + Storybook essentials and a11y addons
+- `storybook-design-token`
+- `chromatic`
+- `@phosphor-icons/react`
+
+
+#### 4.2 Token Transformation
+
+1. Create a script (Node/TS) that:
+    - Reads `tokens/joe-tokens.json`.
+    - Uses `token-transformer` (or a small custom mapper) to:
+        - Resolve references.
+        - Expand typography/shadow/composite tokens.
+    - Writes:
+        - `tokens/output/css/variables.css` – all tokens as `:root { --token-name: value; }`.
+        - `tokens/output/tailwind/theme.cjs` – a JS object compatible with Tailwind’s `theme.extend` for `colors`, `spacing`, `fontSize`, `fontFamily`, `borderRadius`, etc.
+2. Add npm scripts:
+```json
+{
+  "scripts": {
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:watch": "node scripts/build-tokens.mjs --watch"
+  }
+}
+```
+
+Cursor should implement `scripts/build-tokens.mjs` in the repo.
+
+***
+
+### 5. Tailwind Integration
+
+Update `tailwind.config.(js|ts)` so it:
+
+- Imports the generated theme object from `tokens/output/tailwind/theme.cjs`.
+- Uses it in `theme.extend`:
+
+```ts
+import joeTheme from "./tokens/output/tailwind/theme.cjs";
+
+const config = {
+  content: ["./app/**/*.{ts,tsx,js,jsx}", "./src/**/*.{ts,tsx,js,jsx}", "./components/**/*.{ts,tsx,js,jsx}"],
+  theme: {
+    extend: {
+      ...joeTheme
+    }
+  },
+  plugins: []
+};
+
+export default config;
+```
+
+Global CSS should import the generated token variables:
+
+```css
+@import "../tokens/output/css/variables.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Cursor must verify and fix paths based on the actual project layout.
+
+***
+
+### 6. Component System (shadcn + CVA)
+
+**Goal:** Implement a first set of primitive components using shadcn/ui patterns and CVA, wired to the new tokens.
+
+#### 6.1 Utilities
+
+Create `src/lib/utils.ts` (if not present) with:
+
+- `cn` helper using `clsx` + `tailwind-merge`.
+
+
+#### 6.2 Components to Implement First
+
+Using shadcn/ui as a base, create or refactor components under `src/components/ui/`:
+
+1. `button.tsx`
+2. `input.tsx`
+3. `card.tsx`
+4. `badge.tsx`
+5. `alert.tsx`
+
+For each:
+
+- Use `cva` to define `variant` and `size` options.
+- Map variant styling to Tailwind classes that are built from the Joe tokens (colors, spacing, typography). Cursor should reference CSS variables (e.g. `bg-[hsl(var(--joe-color-primary))]`) or Tailwind config keys created from tokens.
+- Ensure components are fully typed with `VariantProps<typeof cvaConfig>`.
+
+Example requirement for `Button`:
+
+- `variant`: `primary`, `secondary`, `outline`, `ghost`, `destructive`.
+- `size`: `sm`, `md`, `lg`, `icon`.
+- Accepts an optional `leftIcon`/`rightIcon` prop for Phosphor icons.
+
+Cursor should read `joe-tokens.json` and choose the correct token names for primary, secondary, destructive, etc., documenting any assumptions in comments.
+
+***
+
+### 7. Icons (Phosphor)
+
+- Install `@phosphor-icons/react`.
+- Ensure Button and other components can consume icons via children or dedicated props.
+- Add at least one Storybook story that uses a Phosphor icon to confirm integration.
+
+***
+
+### 8. Storybook Setup
+
+**Goal:** Have a fully functioning Storybook that shows components and exposes design tokens.[^4][^5]
+
+Tasks for Cursor:
+
+1. If Storybook is not initialized, run an equivalent of `npx storybook@latest init` (generate config files programmatically in the repo).
+2. Configure `.storybook/main.ts` to:
+    - Use React/Next.js framework (depending on repo).
+    - Include addons: `@storybook/addon-essentials`, `@storybook/addon-a11y`, `storybook-design-token`.
+3. Configure `.storybook/preview.ts` to:
+    - Import global styles (including tokens CSS).
+    - Set light/dark backgrounds matching the design system.
+    - Configure `parameters.designToken` to use a mapping from `design-tokens.ts`.
+4. Create `.storybook/design-tokens.ts` that:
+    - Imports `tokens/output/css/variables.css` or a parsed representation.
+    - Exposes at least:
+        - Color tokens.
+        - Spacing tokens.
+        - Typography tokens.
+    - Uses the `storybook-design-token` format so tokens are visible in the “Design Tokens” tab.
+5. For each component created:
+    - Add a `*.stories.tsx` file with:
+        - A default story with controls for `variant` and `size`.
+        - Example states (with icons, loading/disabled, error, etc.).
+    - Ensure stories are typed with `Meta` and `StoryObj`.
+
+***
+
+### 9. Chromatic \& CI
+
+**Goal:** Automatic visual regression tests on every push.
+
+Cursor should:
+
+1. Add `chromatic` dev dependency and a script:
+```json
+{
+  "scripts": {
+    "chromatic": "chromatic --project-token=<TO_FILL_MANUALLY>"
+  }
+}
+```
+
+2. Create `.github/workflows/chromatic.yml` that:
+    - Checks out the repo.
+    - Installs dependencies.
+    - Runs `npm run tokens:build`.
+    - Builds and publishes Storybook through `chromatic` (token to be provided manually later).
+3. Create `.github/workflows/tokens-sync.yml` that:
+    - Runs on pushes that affect `tokens/joe-tokens.json`.
+    - Executes `npm run tokens:build`.
+    - Commits generated files in `tokens/output/**` back to the repo.
+
+CI workflows should be small and self‑contained; Cursor must ensure they work with the current `package.json` scripts.
+
+***
+
+### 10. Constraints \& Non‑Goals
+
+- Do not rename or move `tokens/joe-tokens.json` without explicit instruction.
+- Do not introduce a new design-system framework; stick to React + Tailwind + shadcn + CVA.
+- Mobile/React Native and Swift/Kotlin support are **future** work; however, keep token outputs modular so a `react-native`/`ios`/`android` platform can be added later via Style Dictionary.
+
+***
+
+### 11. How Cursor Should Work
+
+When I ask Cursor to “implement the PRD” or similar, it should:
+
+1. Read this PRD and the existing repo files.
+2. Generate or modify files in small, reviewable steps (per feature/section).
+3. Explain in each change:
+    - What part of the PRD it is implementing.
+    - Which tokens from `joe-tokens.json` are being used for which purpose (e.g., “Button primary background uses `color.brand.primary`”).
+4. Keep code idiomatic, well‑typed (TypeScript), and documented where token mappings are non‑obvious.
+
+***
+
+You can paste this whole PRD into Cursor as:
+
+- `.cursorrules`, or
+- a `project-docs/requirements.md` file and then tell Cursor:
+“Follow the PRD in `project-docs/requirements.md` and start with the token pipeline and Tailwind integration.”

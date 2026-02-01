@@ -1,0 +1,14 @@
+/**
+ * Global CSS
+ * 
+ * Part of PRD Section 5: Tailwind Integration
+ * 
+ * Imports the generated CSS variables from joe-tokens.json
+ * and includes Tailwind's base, components, and utilities.
+ */
+
+@import "../tokens/output/css/variables.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
