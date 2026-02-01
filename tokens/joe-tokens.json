@@ -3,237 +3,237 @@
     "colors": {
       "grey": {
         "50": {
-          "value": "#FAFAFA",
-          "type": "color"
+          "$type": "color",
+          "$value": "#FAFAFA"
         },
         "100": {
-          "value": "#F5F5F5",
-          "type": "color"
+          "$type": "color",
+          "$value": "#F5F5F5"
         },
         "200": {
-          "value": "#E5E5E5",
-          "type": "color"
+          "$type": "color",
+          "$value": "#E5E5E5"
         },
         "300": {
-          "value": "#D4D4D4",
-          "type": "color"
+          "$type": "color",
+          "$value": "#D4D4D4"
         },
         "400": {
-          "value": "#A3A3A3",
-          "type": "color"
+          "$type": "color",
+          "$value": "#A3A3A3"
         },
         "500": {
-          "value": "#737373",
-          "type": "color"
+          "$type": "color",
+          "$value": "#737373"
         },
         "600": {
-          "value": "#525252",
-          "type": "color"
+          "$type": "color",
+          "$value": "#525252"
         },
         "700": {
-          "value": "#404040",
-          "type": "color"
+          "$type": "color",
+          "$value": "#404040"
         },
         "800": {
-          "value": "#262626",
-          "type": "color"
+          "$type": "color",
+          "$value": "#262626"
         },
         "900": {
-          "value": "#171717",
-          "type": "color"
+          "$type": "color",
+          "$value": "#171717"
         }
       },
       "white": {
-        "value": "#FFFFFF",
-        "type": "color"
+        "$type": "color",
+        "$value": "#FFFFFF"
       },
       "black": {
-        "value": "#171717",
-        "type": "color"
+        "$type": "color",
+        "$value": "#171717"
       },
       "blue": {
         "100": {
-          "value": "#EFF6FF",
-          "type": "color"
+          "$type": "color",
+          "$value": "#EFF6FF"
         },
         "200": {
-          "value": "#BFDBFE",
-          "type": "color"
+          "$type": "color",
+          "$value": "#BFDBFE"
         },
         "500": {
-          "value": "#3B82F6",
-          "type": "color"
+          "$type": "color",
+          "$value": "#3B82F6"
         },
         "600": {
-          "value": "#2563EB",
-          "type": "color"
+          "$type": "color",
+          "$value": "#2563EB"
         },
         "700": {
-          "value": "#1D4ED8",
-          "type": "color"
+          "$type": "color",
+          "$value": "#1D4ED8"
         }
       },
       "red": {
         "100": {
-          "value": "#FEF2F2",
-          "type": "color"
+          "$type": "color",
+          "$value": "#FEF2F2"
         },
         "500": {
-          "value": "#EF4444",
-          "type": "color"
+          "$type": "color",
+          "$value": "#EF4444"
         },
         "600": {
-          "value": "#DC2626",
-          "type": "color"
+          "$type": "color",
+          "$value": "#DC2626"
         }
       },
       "green": {
         "100": {
-          "value": "#F0FDF4",
-          "type": "color"
+          "$type": "color",
+          "$value": "#F0FDF4"
         },
         "500": {
-          "value": "#22C55E",
-          "type": "color"
+          "$type": "color",
+          "$value": "#22C55E"
         }
       },
       "yellow": {
         "100": {
-          "value": "#FEFCE8",
-          "type": "color"
+          "$type": "color",
+          "$value": "#FEFCE8"
         },
         "500": {
-          "value": "#EAB308",
-          "type": "color"
+          "$type": "color",
+          "$value": "#EAB308"
         }
       }
     },
     "fonts": {
       "sansSerif": {
-        "value": "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-        "type": "fontFamilies"
+        "$type": "fontFamilies",
+        "$value": "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
       },
       "system": {
-        "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
-        "type": "fontFamilies"
+        "$type": "fontFamilies",
+        "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
       }
     },
     "fontSizes": {
       "heading1": {
-        "value": "1.75rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "1.75rem"
       },
       "heading2": {
-        "value": "1.5rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "1.5rem"
       },
       "heading3": {
-        "value": "1.25rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "1.25rem"
       },
       "heading4": {
-        "value": "1.125rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "1.125rem"
       },
       "body1": {
-        "value": "1rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "1rem"
       },
       "body2": {
-        "value": "0.875rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "0.875rem"
       },
       "body3": {
-        "value": "0.75rem",
-        "type": "fontSizes"
+        "$type": "fontSizes",
+        "$value": "0.75rem"
       }
     },
     "fontWeights": {
       "normal": {
-        "value": "400",
-        "type": "fontWeights"
+        "$type": "fontWeights",
+        "$value": "400"
       },
       "medium": {
-        "value": "500",
-        "type": "fontWeights"
+        "$type": "fontWeights",
+        "$value": "500"
       },
       "semiBold": {
-        "value": "600",
-        "type": "fontWeights"
+        "$type": "fontWeights",
+        "$value": "600"
       },
       "bold": {
-        "value": "700",
-        "type": "fontWeights"
+        "$type": "fontWeights",
+        "$value": "700"
       }
     },
     "lineHeights": {
       "heading1": {
-        "value": "2rem",
-        "type": "lineHeights"
+        "$type": "lineHeights",
+        "$value": "2rem"
       },
       "heading2": {
-        "value": "1.75rem",
-        "type": "lineHeights"
+        "$type": "lineHeights",
+        "$value": "1.75rem"
       },
       "body1": {
-        "value": "1.5rem",
-        "type": "lineHeights"
+        "$type": "lineHeights",
+        "$value": "1.5rem"
       },
       "body2": {
-        "value": "1.25rem",
-        "type": "lineHeights"
+        "$type": "lineHeights",
+        "$value": "1.25rem"
       },
       "body3": {
-        "value": "1.125rem",
-        "type": "lineHeights"
+        "$type": "lineHeights",
+        "$value": "1.125rem"
       }
     },
     "radii": {
       "xs": {
-        "value": "0.25rem",
-        "type": "borderRadius"
+        "$type": "borderRadius",
+        "$value": "0.25rem"
       },
       "s": {
-        "value": "0.375rem",
-        "type": "borderRadius"
+        "$type": "borderRadius",
+        "$value": "0.375rem"
       },
       "m": {
-        "value": "0.5rem",
-        "type": "borderRadius"
+        "$type": "borderRadius",
+        "$value": "0.5rem"
       },
       "l": {
-        "value": "0.75rem",
-        "type": "borderRadius"
+        "$type": "borderRadius",
+        "$value": "0.75rem"
       },
       "full": {
-        "value": "9999px",
-        "type": "borderRadius"
+        "$type": "borderRadius",
+        "$value": "9999px"
       }
     },
     "space": {
       "xxs": {
-        "value": "0.25rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "0.25rem"
       },
       "xs": {
-        "value": "0.5rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "0.5rem"
       },
       "s": {
-        "value": "0.75rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "0.75rem"
       },
       "m": {
-        "value": "1rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "1rem"
       },
       "l": {
-        "value": "1.5rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "1.5rem"
       },
       "xl": {
-        "value": "2rem",
-        "type": "spacing"
+        "$type": "spacing",
+        "$value": "2rem"
       }
     }
   },
@@ -241,150 +241,150 @@
     "color": {
       "background": {
         "default": {
-          "value": "{primitives.colors.white}",
-          "type": "color",
-          "description": "Page background"
+          "$type": "color",
+          "$value": "{primitives.colors.white}",
+          "$description": "Page background"
         },
         "surface": {
-          "value": "{primitives.colors.grey.50}",
-          "type": "color",
-          "description": "Cards, panels"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.50}",
+          "$description": "Cards, panels"
         },
         "muted": {
-          "value": "{primitives.colors.grey.100}",
-          "type": "color",
-          "description": "Muted areas"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.100}",
+          "$description": "Muted areas"
         }
       },
       "text": {
         "primary": {
-          "value": "{primitives.colors.black}",
-          "type": "color",
-          "description": "Primary text"
+          "$type": "color",
+          "$value": "{primitives.colors.black}",
+          "$description": "Primary text"
         },
         "secondary": {
-          "value": "{primitives.colors.grey.700}",
-          "type": "color",
-          "description": "Secondary text"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.700}",
+          "$description": "Secondary text"
         },
         "tertiary": {
-          "value": "{primitives.colors.grey.500}",
-          "type": "color",
-          "description": "Muted text"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.500}",
+          "$description": "Muted text"
         },
         "inverse": {
-          "value": "{primitives.colors.white}",
-          "type": "color",
-          "description": "Text on dark"
+          "$type": "color",
+          "$value": "{primitives.colors.white}",
+          "$description": "Text on dark"
         },
         "disabled": {
-          "value": "{primitives.colors.grey.400}",
-          "type": "color",
-          "description": "Disabled text"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.400}",
+          "$description": "Disabled text"
         }
       },
       "action": {
         "primary": {
-          "value": "{primitives.colors.blue.500}",
-          "type": "color",
-          "description": "Primary button"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.500}",
+          "$description": "Primary button"
         },
         "primaryHover": {
-          "value": "{primitives.colors.blue.600}",
-          "type": "color",
-          "description": "Primary hover"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.600}",
+          "$description": "Primary hover"
         },
         "primaryActive": {
-          "value": "{primitives.colors.blue.700}",
-          "type": "color",
-          "description": "Primary pressed"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.700}",
+          "$description": "Primary pressed"
         },
         "primaryDisabled": {
-          "value": "{primitives.colors.blue.200}",
-          "type": "color",
-          "description": "Primary disabled"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.200}",
+          "$description": "Primary disabled"
         },
         "secondary": {
-          "value": "{primitives.colors.grey.200}",
-          "type": "color",
-          "description": "Secondary button"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.200}",
+          "$description": "Secondary button"
         },
         "secondaryHover": {
-          "value": "{primitives.colors.grey.300}",
-          "type": "color",
-          "description": "Secondary hover"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.300}",
+          "$description": "Secondary hover"
         },
         "ghost": {
-          "value": "transparent",
-          "type": "color",
-          "description": "Ghost button"
+          "$type": "color",
+          "$value": "transparent",
+          "$description": "Ghost button"
         },
         "ghostHover": {
-          "value": "{primitives.colors.grey.100}",
-          "type": "color",
-          "description": "Ghost hover"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.100}",
+          "$description": "Ghost hover"
         },
         "destructive": {
-          "value": "{primitives.colors.red.500}",
-          "type": "color",
-          "description": "Destructive button"
+          "$type": "color",
+          "$value": "{primitives.colors.red.500}",
+          "$description": "Destructive button"
         },
         "destructiveHover": {
-          "value": "{primitives.colors.red.600}",
-          "type": "color",
-          "description": "Destructive hover"
+          "$type": "color",
+          "$value": "{primitives.colors.red.600}",
+          "$description": "Destructive hover"
         }
       },
       "status": {
         "success": {
-          "value": "{primitives.colors.green.500}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.green.500}"
         },
         "successLight": {
-          "value": "{primitives.colors.green.100}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.green.100}"
         },
         "error": {
-          "value": "{primitives.colors.red.500}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.red.500}"
         },
         "errorLight": {
-          "value": "{primitives.colors.red.100}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.red.100}"
         },
         "warning": {
-          "value": "{primitives.colors.yellow.500}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.yellow.500}"
         },
         "warningLight": {
-          "value": "{primitives.colors.yellow.100}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.yellow.100}"
         },
         "info": {
-          "value": "{primitives.colors.blue.500}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.500}"
         },
         "infoLight": {
-          "value": "{primitives.colors.blue.100}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.100}"
         }
       },
       "border": {
         "default": {
-          "value": "{primitives.colors.grey.200}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.200}"
         },
         "strong": {
-          "value": "{primitives.colors.grey.300}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.300}"
         },
         "focus": {
-          "value": "{primitives.colors.blue.500}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.blue.500}"
         },
         "disabled": {
-          "value": "{primitives.colors.grey.200}",
-          "type": "color"
+          "$type": "color",
+          "$value": "{primitives.colors.grey.200}"
         }
       }
     }
