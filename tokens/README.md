@@ -1,8 +1,8 @@
 # Joe Design System – Tokens
 
-This folder is the **single source of truth** for design tokens. The repo uses a minimal starter set so the team can grow the design system from scratch (per the plan in `.cursorrules`).
+This folder is the **single source of truth** for design token.
 
-Generated output is used by: **Next.js** and **Storybook** (Tailwind theme), and by **`app/globals.css`** (CSS variables and ShadCN-style semantic variables for the Button and other components).
+Generated output is used by: **Next.js** and **Storybook**, and by **`app/globals.css`**.
 
 ## Files
 
@@ -49,7 +49,7 @@ Example:
 
 ## Token Studio (Figma) alignment
 
-If you use the **Token Studio** plugin (or similar) in Figma:
+If you use the **Token Studio** plugin in Figma:
 
 1. **Export target**: Point the plugin’s export path to `tokens/joe-tokens.json` (or a file you then copy here).
 2. **Structure**: Configure the plugin so the exported JSON has:
@@ -68,4 +68,4 @@ After any change to `joe-tokens.json`, run `npm run tokens:build` (or rely on CI
 - **Semantic**: Add under `semantic.color` (or other semantic groups the script supports). Prefer referencing primitives, e.g. `"value": "{primitives.colors.blue.500}"`.
 - **New categories**: If you add new top-level sections (e.g. `semantic.shadow`), you may need to extend `scripts/build-tokens.mjs` to emit CSS and/or Tailwind for them.
 
-The current set covers: **Button** (primary grey-800/900, secondary, outline, ghost, destructive), and the semantic color/space/typography/radius tokens used by the UI components and `app/globals.css`. It can be extended for Input, Card, Badge, Alert, etc. as needed.
+The current set covers: **Button** (primary, secondary, outline, ghost, destructive, icon), and the semantic color/space/typography/radius tokens used by the UI components and `app/globals.css`. It can be extended for Input, Card, Badge, Alert, etc. as needed.

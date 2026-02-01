@@ -9,7 +9,7 @@ Token-driven React component library for Joe Coffee. Built with Tailwind CSS, sh
 ## Tech stack
 
 - **Tokens**: `tokens/joe-tokens.json` → CSS variables + Tailwind theme via `scripts/build-tokens.mjs`
-- **Styling**: Tailwind CSS, semantic variables in `app/globals.css` (ShadCN-style for Button etc.)
+- **Styling**: Tailwind CSS, semantic variables in `app/globals.css`
 - **Components**: React, CVA, `tailwind-merge` + `cn()`; Phosphor Icons
 - **Docs**: Storybook 10 (Webpack), addon-a11y, storybook-design-token
 

@@ -266,9 +266,3 @@ When I ask Cursor to “implement the PRD” or similar, it should:
 4. Keep code idiomatic, well‑typed (TypeScript), and documented where token mappings are non‑obvious.
 
 ***
-
-You can paste this whole PRD into Cursor as:
-
-- `.cursorrules`, or
-- a `project-docs/requirements.md` file and then tell Cursor:
-“Follow the PRD in `project-docs/requirements.md` and start with the token pipeline and Tailwind integration.”
