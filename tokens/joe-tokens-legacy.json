@@ -388,12 +388,5 @@
         }
       }
     }
-  },
-  "$themes": [],
-  "$metadata": {
-    "tokenSetOrder": [
-      "primitives",
-      "semantic"
-    ]
   }
 }

@@ -34,12 +34,20 @@ function normalizeToLegacy(obj) {
   if (obj.$description !== undefined || obj.description !== undefined) {
     normalized.description = obj.$description ?? obj.description;
   }
-  if (obj.$themes !== undefined) normalized.$themes = obj.$themes;
-  if (obj.$metadata !== undefined) normalized.$metadata = obj.$metadata;
   return normalized;
 }
 
 const raw = JSON.parse(fs.readFileSync(TOKENS_FILE, 'utf8'));
-const legacy = normalizeToLegacy(raw);
+const full = normalizeToLegacy(raw);
+// Output only primitives + semantic (no $themes, $metadata). Token Studio preserves
+// variable-to-variable references when the file has exactly these two sets in Legacy format.
+const legacy = {
+  primitives: full.primitives,
+  semantic: full.semantic
+};
+if (!legacy.primitives || !legacy.semantic) {
+  console.error('joe-tokens.json must have top-level "primitives" and "semantic"');
+  process.exit(1);
+}
 fs.writeFileSync(LEGACY_OUTPUT, JSON.stringify(legacy, null, 2) + '\n', 'utf8');
 console.log('Wrote', LEGACY_OUTPUT);
