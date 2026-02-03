@@ -39,15 +39,19 @@ function normalizeToLegacy(obj) {
 
 const raw = JSON.parse(fs.readFileSync(TOKENS_FILE, 'utf8'));
 const full = normalizeToLegacy(raw);
-// Output only primitives + semantic (no $themes, $metadata). Token Studio preserves
-// variable-to-variable references when the file has exactly these two sets in Legacy format.
-const legacy = {
-  primitives: full.primitives,
-  semantic: full.semantic
-};
-if (!legacy.primitives || !legacy.semantic) {
+if (!full.primitives || !full.semantic) {
   console.error('joe-tokens.json must have top-level "primitives" and "semantic"');
   process.exit(1);
 }
+// Include $metadata.tokenSetOrder so Token Studio exports primitives FIRST, then semantic.
+// That order is required for semantic Variables to be created as aliases to primitive Variables
+// (referenced variables must exist in Figma before the referencing variables are created).
+const legacy = {
+  primitives: full.primitives,
+  semantic: full.semantic,
+  $metadata: {
+    tokenSetOrder: ['primitives', 'semantic']
+  }
+};
 fs.writeFileSync(LEGACY_OUTPUT, JSON.stringify(legacy, null, 2) + '\n', 'utf8');
 console.log('Wrote', LEGACY_OUTPUT);

@@ -388,5 +388,11 @@
         }
       }
     }
+  },
+  "$metadata": {
+    "tokenSetOrder": [
+      "primitives",
+      "semantic"
+    ]
   }
 }
