@@ -1,5 +1,5 @@
 {
-  "joe": {
+  "primitives": {
     "colors": {
       "grey": {
         "50": {
@@ -235,163 +235,158 @@
         "value": "2rem",
         "type": "spacing"
       }
-    },
-    "semantic": {
-      "color": {
-        "background": {
-          "default": {
-            "value": "{joe.colors.white}",
-            "type": "color",
-            "description": "Page background"
-          },
-          "surface": {
-            "value": "{joe.colors.grey.50}",
-            "type": "color",
-            "description": "Cards, panels"
-          },
-          "muted": {
-            "value": "{joe.colors.grey.100}",
-            "type": "color",
-            "description": "Muted areas"
-          }
+    }
+  },
+  "semantic": {
+    "color": {
+      "background": {
+        "default": {
+          "value": "{primitives.colors.white}",
+          "type": "color",
+          "description": "Page background"
         },
-        "text": {
-          "primary": {
-            "value": "{joe.colors.black}",
-            "type": "color",
-            "description": "Primary text"
-          },
-          "secondary": {
-            "value": "{joe.colors.grey.700}",
-            "type": "color",
-            "description": "Secondary text"
-          },
-          "tertiary": {
-            "value": "{joe.colors.grey.500}",
-            "type": "color",
-            "description": "Muted text"
-          },
-          "inverse": {
-            "value": "{joe.colors.white}",
-            "type": "color",
-            "description": "Text on dark"
-          },
-          "disabled": {
-            "value": "{joe.colors.grey.400}",
-            "type": "color",
-            "description": "Disabled text"
-          }
+        "surface": {
+          "value": "{primitives.colors.grey.50}",
+          "type": "color",
+          "description": "Cards, panels"
         },
-        "action": {
-          "primary": {
-            "value": "{joe.colors.blue.500}",
-            "type": "color",
-            "description": "Primary button"
-          },
-          "primaryHover": {
-            "value": "{joe.colors.blue.600}",
-            "type": "color",
-            "description": "Primary hover"
-          },
-          "primaryActive": {
-            "value": "{joe.colors.blue.700}",
-            "type": "color",
-            "description": "Primary pressed"
-          },
-          "primaryDisabled": {
-            "value": "{joe.colors.blue.200}",
-            "type": "color",
-            "description": "Primary disabled"
-          },
-          "secondary": {
-            "value": "{joe.colors.grey.200}",
-            "type": "color",
-            "description": "Secondary button"
-          },
-          "secondaryHover": {
-            "value": "{joe.colors.grey.300}",
-            "type": "color",
-            "description": "Secondary hover"
-          },
-          "ghost": {
-            "value": "transparent",
-            "type": "color",
-            "description": "Ghost button"
-          },
-          "ghostHover": {
-            "value": "{joe.colors.grey.100}",
-            "type": "color",
-            "description": "Ghost hover"
-          },
-          "destructive": {
-            "value": "{joe.colors.red.500}",
-            "type": "color",
-            "description": "Destructive button"
-          },
-          "destructiveHover": {
-            "value": "{joe.colors.red.600}",
-            "type": "color",
-            "description": "Destructive hover"
-          }
+        "muted": {
+          "value": "{primitives.colors.grey.100}",
+          "type": "color",
+          "description": "Muted areas"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "{primitives.colors.black}",
+          "type": "color",
+          "description": "Primary text"
         },
-        "status": {
-          "success": {
-            "value": "{joe.colors.green.500}",
-            "type": "color"
-          },
-          "successLight": {
-            "value": "{joe.colors.green.100}",
-            "type": "color"
-          },
-          "error": {
-            "value": "{joe.colors.red.500}",
-            "type": "color"
-          },
-          "errorLight": {
-            "value": "{joe.colors.red.100}",
-            "type": "color"
-          },
-          "warning": {
-            "value": "{joe.colors.yellow.500}",
-            "type": "color"
-          },
-          "warningLight": {
-            "value": "{joe.colors.yellow.100}",
-            "type": "color"
-          },
-          "info": {
-            "value": "{joe.colors.blue.500}",
-            "type": "color"
-          },
-          "infoLight": {
-            "value": "{joe.colors.blue.100}",
-            "type": "color"
-          }
+        "secondary": {
+          "value": "{primitives.colors.grey.700}",
+          "type": "color",
+          "description": "Secondary text"
         },
-        "border": {
-          "default": {
-            "value": "{joe.colors.grey.200}",
-            "type": "color"
-          },
-          "strong": {
-            "value": "{joe.colors.grey.300}",
-            "type": "color"
-          },
-          "focus": {
-            "value": "{joe.colors.blue.500}",
-            "type": "color"
-          },
-          "disabled": {
-            "value": "{joe.colors.grey.200}",
-            "type": "color"
-          }
+        "tertiary": {
+          "value": "{primitives.colors.grey.500}",
+          "type": "color",
+          "description": "Muted text"
+        },
+        "inverse": {
+          "value": "{primitives.colors.white}",
+          "type": "color",
+          "description": "Text on dark"
+        },
+        "disabled": {
+          "value": "{primitives.colors.grey.400}",
+          "type": "color",
+          "description": "Disabled text"
+        }
+      },
+      "action": {
+        "primary": {
+          "value": "{primitives.colors.blue.500}",
+          "type": "color",
+          "description": "Primary button"
+        },
+        "primaryHover": {
+          "value": "{primitives.colors.blue.600}",
+          "type": "color",
+          "description": "Primary hover"
+        },
+        "primaryActive": {
+          "value": "{primitives.colors.blue.700}",
+          "type": "color",
+          "description": "Primary pressed"
+        },
+        "primaryDisabled": {
+          "value": "{primitives.colors.blue.200}",
+          "type": "color",
+          "description": "Primary disabled"
+        },
+        "secondary": {
+          "value": "{primitives.colors.grey.200}",
+          "type": "color",
+          "description": "Secondary button"
+        },
+        "secondaryHover": {
+          "value": "{primitives.colors.grey.300}",
+          "type": "color",
+          "description": "Secondary hover"
+        },
+        "ghost": {
+          "value": "transparent",
+          "type": "color",
+          "description": "Ghost button"
+        },
+        "ghostHover": {
+          "value": "{primitives.colors.grey.100}",
+          "type": "color",
+          "description": "Ghost hover"
+        },
+        "destructive": {
+          "value": "{primitives.colors.red.500}",
+          "type": "color",
+          "description": "Destructive button"
+        },
+        "destructiveHover": {
+          "value": "{primitives.colors.red.600}",
+          "type": "color",
+          "description": "Destructive hover"
+        }
+      },
+      "status": {
+        "success": {
+          "value": "{primitives.colors.green.500}",
+          "type": "color"
+        },
+        "successLight": {
+          "value": "{primitives.colors.green.100}",
+          "type": "color"
+        },
+        "error": {
+          "value": "{primitives.colors.red.500}",
+          "type": "color"
+        },
+        "errorLight": {
+          "value": "{primitives.colors.red.100}",
+          "type": "color"
+        },
+        "warning": {
+          "value": "{primitives.colors.yellow.500}",
+          "type": "color"
+        },
+        "warningLight": {
+          "value": "{primitives.colors.yellow.100}",
+          "type": "color"
+        },
+        "info": {
+          "value": "{primitives.colors.blue.500}",
+          "type": "color"
+        },
+        "infoLight": {
+          "value": "{primitives.colors.blue.100}",
+          "type": "color"
+        }
+      },
+      "border": {
+        "default": {
+          "value": "{primitives.colors.grey.200}",
+          "type": "color"
+        },
+        "strong": {
+          "value": "{primitives.colors.grey.300}",
+          "type": "color"
+        },
+        "focus": {
+          "value": "{primitives.colors.blue.500}",
+          "type": "color"
+        },
+        "disabled": {
+          "value": "{primitives.colors.grey.200}",
+          "type": "color"
         }
       }
     }
-  },
-  "$metadata": {
-    "tokenSetOrder": [
-      "joe"
-    ]
   }
 }
