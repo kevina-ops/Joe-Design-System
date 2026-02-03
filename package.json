@@ -16,6 +16,7 @@
     "lint": "next lint",
     "storybook": "npx storybook dev -p 6006",
     "build-storybook": "npx storybook build",
+    "build:vercel": "npm run tokens:build && npm run build-storybook",
     "chromatic": "chromatic --project-token=chpt_2baad533b36beb2"
   },
   "dependencies": {
