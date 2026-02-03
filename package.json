@@ -7,8 +7,9 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:build": "node scripts/build-tokens.mjs && node scripts/export-legacy-tokens.mjs",
     "tokens:watch": "node scripts/build-tokens.mjs --watch",
+    "tokens:legacy": "node scripts/export-legacy-tokens.mjs",
     "dev": "next dev",
     "build": "npm run tokens:build && next build",
     "start": "next start",
