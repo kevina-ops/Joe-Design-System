@@ -16,7 +16,8 @@
 /* ShadCN-style semantic variables (values from Joe design tokens) */
 :root {
   --background: var(--joe-semantic-color-background-default);
-  --foreground: var(--joe-semantic-color-text-primary);
+  /* Use dark text token for light backgrounds - foreground should contrast with background */
+  --foreground: var(--joe-semantic-color-text-general-foreground);
   --primary: var(--joe-semantic-color-action-primary);
   --primary-foreground: var(--joe-semantic-color-text-inverse);
   --secondary: var(--joe-semantic-color-action-secondary);
@@ -24,7 +25,8 @@
   --destructive: var(--joe-semantic-color-action-destructive);
   --destructive-foreground: var(--joe-semantic-color-text-inverse);
   --accent: var(--joe-semantic-color-action-ghostHover);
-  --accent-foreground: var(--joe-semantic-color-text-primary);
+  /* Use dedicated accent foreground token for proper contrast on light backgrounds */
+  --accent-foreground: var(--joe-semantic-color-text-general-accent-foreground);
   --muted: var(--joe-primitives-colors-grey-100);
   --muted-foreground: var(--joe-semantic-color-text-secondary);
   --border: var(--joe-semantic-color-border-default);
