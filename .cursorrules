@@ -1,5 +1,13 @@
 ## Project: Joe Design System – Token‑Driven Component Library
 
+### Cursor Should use MCP
+
+When answering questions or editing code in this workspace, automatically use the following tools when they are helpful:
+
+- Context7 for framework/library documentation (Astro ecosystem, Tailwind, React, etc.) instead of guessing.
+- Browser MCP for tasks that require running or inspecting the site in the browser (navigation, screenshots, checking layouts).
+Prefer using these tools over unsupported web browsing.
+
 ### 1. Goal
 
 Build a token-driven React design system for Joe using Tailwind, shadcn/ui, CVA, Storybook, Chromatic, and Phosphor Icons, with `tokens/joe-tokens.json` as the single source of truth for all styles.

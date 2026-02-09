@@ -124,9 +124,17 @@ function getNestedValue(obj, path) {
 /**
  * Converts a token path to a CSS variable name
  * Example: primitives.colors.blue.500 -> --joe-primitives-colors-blue-500
+ * Sanitizes invalid characters (spaces, special chars) to hyphens
  */
 function tokenPathToCSSVar(path) {
-  return `--joe-${path.replace(/\./g, '-')}`;
+  // Replace dots with hyphens, then sanitize any spaces or invalid characters
+  const sanitized = path
+    .replace(/\./g, '-')
+    .replace(/\s+/g, '-')  // Replace spaces with hyphens
+    .replace(/[^a-zA-Z0-9_-]/g, '-')  // Replace any other invalid chars with hyphens
+    .replace(/-+/g, '-')  // Replace multiple consecutive hyphens with single hyphen
+    .replace(/^-|-$/g, '');  // Remove leading/trailing hyphens
+  return `--joe-${sanitized}`;
 }
 
 /**

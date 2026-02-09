@@ -19,6 +19,10 @@ Token-driven React component library for Joe Coffee. Built with Tailwind CSS, sh
 |--------|-------------|
 | `npm run tokens:build` | Build CSS variables and Tailwind theme from `tokens/joe-tokens.json` |
 | `npm run tokens:watch` | Watch tokens and rebuild on change |
+| `npm run tokens:import-obra` | Import Obra tokens from Token Studio export (colors only) |
+| `npm run tokens:import-figma` | Import Figma variables from "Export modes" (all types - recommended) |
+| `npm run components:generate` | Generate all shadcn/ui components with Storybook stories |
+| `npm run components:generate:single` | Generate a single component (e.g., `npm run components:generate:single input`) |
 | `npm run dev` | Next.js dev server |
 | `npm run build` | Build tokens, then Next.js |
 | `npm run storybook` | Storybook dev server (port 6006) |
@@ -52,3 +56,27 @@ Token-driven React component library for Joe Coffee. Built with Tailwind CSS, sh
 ## Tokens
 
 Design tokens are documented in [tokens/README.md](tokens/README.md). Edit `tokens/joe-tokens.json`, then run `npm run tokens:build`. Generated files go to `tokens/output/` (CSS variables and Tailwind theme).
+
+### Obra shadcn/ui Integration
+
+This project integrates with the [Obra shadcn/ui Figma kit](https://shadcn.obra.studio/) for design-to-code synchronization.
+
+**Documentation:**
+- [Obra Integration Guide](tokens/OBRA_INTEGRATION.md) - Complete setup and workflow
+- [Storybook to Figma Sync](tokens/STORYBOOK_TO_FIGMA_SYNC.md) - Sync tokens from Storybook back to Figma
+- [Figma Export Guide](tokens/FIGMA_EXPORT_GUIDE.md) - Export tokens from Figma
+
+**Quick start (Figma → Code):**
+1. Export tokens from Figma Variables panel ("Export modes")
+2. Import: `npm run tokens:import-figma-folder`
+3. Build: `npm run tokens:build`
+4. Generate components: `npm run components:generate`
+5. View in Storybook: `npm run storybook`
+
+**⚠️ Important:** Obra Figma is the source of truth. Always sync FROM Obra TO Storybook, never the reverse. See [Obra Workflow](tokens/OBRA_WORKFLOW.md) for details.
+
+**Quick start (Obra → Storybook):**
+1. Export from Obra: Variables panel → "Export modes" → Save to `tokens/obra-variables-figma-export/`
+2. Import: `npm run tokens:import-figma-folder`
+3. Build: `npm run tokens:build`
+4. View: `npm run storybook`

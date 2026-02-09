@@ -1,8 +1,18 @@
+import React from 'react';
 import '../app/globals.css';
 import { designTokens } from './design-tokens';
+import { ThemeProvider } from 'next-themes';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
+  decorators: [
+    (Story) =>
+      React.createElement(
+        ThemeProvider,
+        { attribute: 'class', defaultTheme: 'light', enableSystem: false },
+        React.createElement(Story)
+      ),
+  ],
   parameters: {
     designToken: designTokens,
     controls: {

@@ -1,0 +1,169 @@
+{
+  "rounded-none": {
+    "$type": "number",
+    "$value": 0,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:844:1251290",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-xs": {
+    "$type": "number",
+    "$value": 2,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:105987",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:0b80b2eefb3788c21874f2f629ead6ef690bbe36/-1:-1",
+        "targetVariableName": "radius-2",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-sm": {
+    "$type": "number",
+    "$value": 4,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:168381",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:5f46da9fba4677322ed9409979f08947ec6363e3/-1:-1",
+        "targetVariableName": "radius-4",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-md": {
+    "$type": "number",
+    "$value": 6,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:105990",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:145874a1ca8f9fa82e13f7230f3d1c88383e5ff1/-1:-1",
+        "targetVariableName": "radius-6",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-lg": {
+    "$type": "number",
+    "$value": 8,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:105988",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:51a6a14cc6def4f34c55ee60e531f57474ba4d4c/-1:-1",
+        "targetVariableName": "radius-8",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "radius": {
+    "$type": "number",
+    "$value": 10,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:1252:94709",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:a1278729de9e95bede5d7a14af83bba15ff47307/-1:-1",
+        "targetVariableName": "radius-10",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-xl": {
+    "$type": "number",
+    "$value": 12,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:105989",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:a44b0a7587102b1e413d758aa8b77436d5658439/-1:-1",
+        "targetVariableName": "radius-12",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-2xl": {
+    "$type": "number",
+    "$value": 16,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:845:1251293",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:f051d609990c9e351a7eb4e322d4ac96c27bfb03/-1:-1",
+        "targetVariableName": "radius-16",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-3xl": {
+    "$type": "number",
+    "$value": 24,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:845:1251294",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:8bc1971aa4da3ec61357842b529f4ba8c86f5e6d/-1:-1",
+        "targetVariableName": "radius-24",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "rounded-full": {
+    "$type": "number",
+    "$value": 9999,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:843:168382",
+      "com.figma.scopes": [
+        "CORNER_RADIUS"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:15b959d7987d6ab50f6819c5edf76a844b7c32e4/-1:-1",
+        "targetVariableName": "radius-infinite",
+        "targetVariableSetId": "VariableCollectionId:ae9b7a3b5c5f2ad454e8485dd46a7a714833ee36/-1:-1",
+        "targetVariableSetName": "border radii (absolute)"
+      },
+      "com.figma.isOverride": true
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "shadcn"
+  }
+}
