@@ -27,7 +27,7 @@ The design system must:
 - Repository: `kevina-ops/Joe-Design-System` (Cursor should open this repo).
 - Token file: `tokens/joe-tokens.json` (current design tokens – treat as source-of-truth, not legacy).
 - Planned stack:
-    - React (preferably Next.js) + Tailwind CSS.
+    - React + Tailwind CSS.
     - shadcn/ui components.
     - Class Variance Authority (CVA) for variants.
     - Storybook.
@@ -204,7 +204,7 @@ Tasks for Cursor:
 
 1. If Storybook is not initialized, run an equivalent of `npx storybook@latest init` (generate config files programmatically in the repo).
 2. Configure `.storybook/main.ts` to:
-    - Use React/Next.js framework (depending on repo).
+    - Use React framework.
     - Include addons: `@storybook/addon-essentials`, `@storybook/addon-a11y`, `storybook-design-token`.
 3. Configure `.storybook/preview.ts` to:
     - Import global styles (including tokens CSS).

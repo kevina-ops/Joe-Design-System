@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Import Obra Tokens from Token Studio Export
+ * Import Obra Tokens from Figma Export
  * 
- * This script imports tokens exported from Obra shadcn/ui Figma kit via Token Studio.
+ * This script imports tokens exported from Obra shadcn/ui Figma kit.
  * It merges Obra tokens into the existing joe-tokens.json structure, preserving
  * the primitives + semantic structure while using Obra's default values.
  * 
@@ -14,7 +14,6 @@
  * 1. Read the Obra tokens JSON file
  * 2. Map Obra tokens to the primitives/semantic structure
  * 3. Merge with existing joe-tokens.json (backing up first)
- * 4. Generate legacy format for Token Studio sync
  */
 
 import fs from 'fs';

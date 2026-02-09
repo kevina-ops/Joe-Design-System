@@ -4,7 +4,7 @@
  * Import Figma Variables from "Export modes" JSON
  * 
  * This script imports variables exported from Figma's native "Export modes" feature.
- * Unlike Token Studio's import (which only handles colors), this captures ALL variable
+ * This captures ALL variable types (colors, spacing, typography, radii, shadows, etc.)
  * types: colors, spacing, typography, border radii, shadows, etc.
  * 
  * Usage:

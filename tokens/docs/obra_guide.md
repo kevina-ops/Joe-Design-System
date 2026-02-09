@@ -1,14 +1,26 @@
-# Correct Workflow: Obra Figma → Storybook
+# Obra shadcn/ui Integration Guide
 
-**Key Principle: Obra Figma is the source of truth. Always sync FROM Obra TO Storybook, never the reverse.**
+Complete guide for integrating Obra shadcn/ui Figma kit tokens with the Joe Design System, keeping everything in sync between Figma and Storybook.
 
-## Why This Matters
+## Key Principle
+
+**Obra Figma is the source of truth. Always sync FROM Obra TO Storybook, never the reverse.**
+
+### Why This Matters
 
 - Obra Figma already has all components properly mapped to variables
 - Obra's variable structure is production-ready
 - Exporting tokens back to Obra would **override** existing variables
 - This would **break** all component mappings in Obra
 - You'd have to manually remap everything (which you want to avoid!)
+
+## Overview
+
+The integration allows you to:
+1. **Import Obra tokens** from Figma export into your token system
+2. **Keep Obra default values** (perfect for when rebranding isn't complete)
+3. **Maintain sync** between Figma and Storybook
+4. **Generate all shadcn/ui components** with Storybook stories
 
 ## The Correct Workflow
 
@@ -43,9 +55,9 @@
 └─────────────────┘
 ```
 
-## Step-by-Step: Sync Obra → Storybook
+## Step-by-Step Setup
 
-### 1. Export from Obra Figma
+### Step 1: Export Tokens from Obra Figma
 
 1. Open **Obra shadcn/ui** file in Figma
 2. Open **Variables** panel (right sidebar)
@@ -57,7 +69,7 @@
 - All collections (colors, spacing, typography, radii, shadows, etc.)
 - Both modes if you have light/dark themes
 
-### 2. Import to Your Project
+### Step 2: Import to Your Project
 
 ```bash
 # Import all tokens from the folder
@@ -73,7 +85,7 @@ This will:
 - Merge with existing tokens (Obra values take precedence)
 - Generate `joe-tokens.json`
 
-### 3. Build Tokens
+### Step 3: Build Tokens
 
 ```bash
 npm run tokens:build
@@ -82,9 +94,18 @@ npm run tokens:build
 This generates:
 - `tokens/output/css/variables.css` (for Storybook)
 - `tokens/output/tailwind/theme.cjs` (for Tailwind)
-- `tokens/joe-tokens-legacy.json` (for Token Studio, if needed)
 
-### 4. View in Storybook
+### Step 4: Generate Components
+
+```bash
+npm run components:generate
+```
+
+This generates all shadcn/ui components:
+- `src/components/ui/*.tsx` (React components)
+- `src/components/ui/*.stories.jsx` (Storybook stories)
+
+### Step 5: View in Storybook
 
 ```bash
 npm run storybook
@@ -92,22 +113,87 @@ npm run storybook
 
 Open the **Design Tokens** tab to see all your tokens!
 
-## Do You Need Token Studio?
+## Workflow: Design → Code
 
-**No.** For the Obra → Storybook workflow you **don't need Token Studio**.
+### Designers Working in Figma
 
-| What you use | Purpose |
-|--------------|--------|
-| **Figma Variables panel** | Export tokens from Obra ("Export modes") |
-| **Import script** | `npm run tokens:import-figma-folder` |
-| **Build** | `npm run tokens:build` |
-| **Storybook** | View tokens |
+1. **Use Obra components** from the Figma library
+2. **Modify tokens** in Figma Variables panel (if needed)
+3. **Export tokens** when ready to sync using "Export modes"
 
-Token Studio is **optional** and only useful if you later:
-- Create a **new** Figma file (not Obra) and want to push tokens from code into it
-- Need Token Studio’s repo sync for a different workflow (e.g. code as source of truth)
+### Developers Working in Code
 
-For **Obra as source of truth → Storybook**, use only Figma’s built-in export and the project scripts. You can ignore Token Studio and `joe-tokens-legacy.json` (that file is only for Token Studio if you ever use it).
+1. **Import tokens** from Figma export:
+   ```bash
+   npm run tokens:import-figma-folder
+   npm run tokens:build
+   ```
+
+2. **Generate new components** (if Obra added new ones):
+   ```bash
+   npm run components:generate
+   ```
+
+3. **View in Storybook**:
+   ```bash
+   npm run storybook
+   ```
+
+4. **Commit changes**:
+   ```bash
+   git add tokens/joe-tokens.json tokens/output/
+   git commit -m "Sync tokens from Figma"
+   ```
+
+## Token Structure
+
+The system maintains this structure:
+
+```
+joe-tokens.json (W3C format)
+├── primitives/          # Base design tokens
+│   ├── colors/
+│   ├── space/
+│   ├── radii/
+│   ├── fonts/
+│   └── ...
+└── semantic/           # Semantic tokens (reference primitives)
+    └── color/
+        ├── background/
+        ├── text/
+        ├── action/
+        └── ...
+```
+
+Obra tokens are automatically mapped to this structure during import.
+
+## Component Generation
+
+### Generate All Components
+
+```bash
+npm run components:generate
+```
+
+### Generate Single Component
+
+```bash
+npm run components:generate:single input
+```
+
+### Available Components
+
+The generator supports these shadcn/ui components:
+
+- `input`, `textarea`, `label`
+- `card`, `badge`, `alert`
+- `button` (already exists)
+- `accordion`, `alert-dialog`, `dialog`
+- `dropdown-menu`, `select`, `combobox`
+- `tabs`, `table`, `skeleton`
+- And 30+ more...
+
+See `scripts/generate-components.mjs` for the full list.
 
 ## When You Make Changes
 
@@ -137,6 +223,19 @@ If you need custom tokens that don't exist in Obra:
 3. Use in Storybook/components
 4. **Optionally:** Create a separate Figma file for your custom tokens (not Obra)
 
+## Dependencies
+
+Some components require Radix UI primitives. Install as needed:
+
+```bash
+npm install @radix-ui/react-label
+npm install @radix-ui/react-separator
+npm install @radix-ui/react-dialog
+# ... etc
+```
+
+The generator will warn you if a component needs additional dependencies.
+
 ## Best Practices
 
 1. **Always export from Obra first**
@@ -159,6 +258,10 @@ If you need custom tokens that don't exist in Obra:
    - Always run `npm run storybook` after importing
    - Verify tokens appear correctly in Design Tokens tab
 
+6. **Always backup**: The import script creates `joe-tokens.json.backup`
+7. **Review before committing**: Check merged tokens before pushing
+8. **Use semantic tokens**: Prefer semantic tokens over primitives in components
+
 ## Troubleshooting
 
 ### "Tokens don't match Obra"
@@ -175,6 +278,28 @@ If you need custom tokens that don't exist in Obra:
 - Check that you exported all collections from Obra
 - Verify the import script processed all files
 - Check `tokens/joe-tokens.json` to see what was imported
+
+### Import Issues
+
+If tokens aren't importing correctly:
+
+1. **Verify export format**: Make sure you used Figma's "Export modes" feature
+2. **Check file structure**: The import script expects Figma's export format with `collections` array
+3. **Review mappings**: Check `joe-tokens.json` after import to verify token mappings
+
+### Components Not Rendering
+
+1. **Check dependencies**: Some components need `@radix-ui/*` packages
+2. **Verify Tailwind config**: Ensure tokens are built (`npm run tokens:build`)
+3. **Check Storybook**: Run `npm run storybook` to see component stories
+
+### Import Mapping Issues
+
+If Obra tokens aren't mapping correctly:
+
+1. **Review the import script**: `scripts/import-obra-tokens.mjs`
+2. **Check Obra token structure**: The script uses heuristics to map tokens
+3. **Manual adjustment**: Edit `joe-tokens.json` directly if needed
 
 ### "I accidentally synced back to Obra"
 
@@ -196,7 +321,6 @@ If you need custom tokens that don't exist in Obra:
 - Export tokens TO Obra Figma
 - Override Obra's variables
 - Break Obra's component mappings
-- Use Token Studio to sync back to Obra
 
 ## Quick Reference
 
@@ -215,8 +339,13 @@ npm run storybook
 **Never do this:**
 ```bash
 # ❌ DON'T sync Storybook → Obra
-npm run tokens:build
-git push
-# Then Token Studio → Export to Obra
-# This would break Obra!
+# Don't export tokens back to Obra - it would break existing component mappings!
 ```
+
+## Resources
+
+- [Quick Start Guide](./obra_quick_start.md) - Fast-track setup
+- [Figma Export Guide](./figma_export_guide.md) - Detailed export instructions
+- [Obra shadcn/ui Kit](https://shadcn.obra.studio/)
+- [shadcn/ui Components](https://ui.shadcn.com/docs/components)
+- [Token Documentation](../README.md)

@@ -14,10 +14,6 @@ This is a fast-track guide to get Obra shadcn/ui tokens and components synced wi
 4. Choose **"Export modes"**
 5. Save the JSON file (e.g., `figma-variables-export.json`)
 
-**Alternative: Token Studio Export** (only imports colors)
-1. Open Token Studio plugin
-2. Export tokens as JSON
-3. Save file (e.g., `obra-tokens.json`)
 
 ### Step 2: Import Tokens
 
@@ -29,19 +25,11 @@ npm run tokens:import-figma ./figma-variables-export.json --mode shadcn
 npm run tokens:build
 ```
 
-**If you used Token Studio export:**
-```bash
-npm run tokens:import-obra ./obra-tokens.json
-npm run tokens:build
-```
-
-**Note:** Figma's "Export modes" captures ALL variable types (colors, spacing, typography, radii, shadows). Token Studio import only handles colors.
 
 This will:
 - ✅ Backup your existing tokens
 - ✅ Map Obra tokens to your structure
 - ✅ Generate CSS variables and Tailwind theme
-- ✅ Create legacy format for Token Studio sync
 
 ### Step 3: Generate Components
 
@@ -87,20 +75,14 @@ Open http://localhost:6006 to see all components!
 ### Tokens Generated
 - ✅ `tokens/output/css/variables.css` - CSS custom properties
 - ✅ `tokens/output/tailwind/theme.cjs` - Tailwind theme
-- ✅ `tokens/joe-tokens-legacy.json` - For Token Studio sync
 
-## 🔄 Two-Way Sync Workflow
+## 🔄 One-Way Sync Workflow: Figma → Code
 
 ### Figma → Code
-1. Export tokens from Token Studio
-2. Run `npm run tokens:import-obra <file>`
+1. Export tokens from Figma Variables panel ("Export modes")
+2. Run `npm run tokens:import-figma <file>` or `npm run tokens:import-figma-folder`
 3. Run `npm run tokens:build`
 4. Commit changes
-
-### Code → Figma
-1. Edit `tokens/joe-tokens.json`
-2. Run `npm run tokens:build`
-3. Token Studio syncs from `tokens/joe-tokens-legacy.json`
 
 ## 📝 Available Components
 
@@ -138,9 +120,9 @@ See `scripts/generate-components.mjs` for the complete list.
 
 ## 📚 Documentation
 
-- [Full Obra Integration Guide](tokens/OBRA_INTEGRATION.md)
-- [Token Documentation](tokens/README.md)
-- [Main README](README.md)
+- [Full Obra Guide](./obra_guide.md) - Comprehensive integration and workflow guide
+- [Token Documentation](../README.md)
+- [Figma Export Guide](./figma_export_guide.md)
 
 ## ⚠️ Notes
 
@@ -158,6 +140,6 @@ Your design system now has:
 - ✅ Obra tokens integrated
 - ✅ All shadcn/ui components available
 - ✅ Storybook documentation
-- ✅ Two-way sync with Figma
+- ✅ One-way sync from Figma to code
 
 Start designing in Figma and sync to code, or generate components and view them in Storybook!

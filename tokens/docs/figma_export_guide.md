@@ -1,10 +1,8 @@
 # Figma Variables Export Guide
 
-## Why Use Figma's "Export modes" Instead of Token Studio Import?
+## Why Use Figma's "Export modes"?
 
-Token Studio's "Import variables" feature has a limitation: **it only imports color variables**, even when you select all variable types (spacing, typography, radii, shadows, etc.).
-
-Figma's native **"Export modes"** feature provides a complete export of ALL variable types, making it the recommended approach for importing tokens.
+Figma's native **"Export modes"** feature provides a complete export of ALL variable types (colors, spacing, typography, radii, shadows, etc.), making it the recommended approach for importing tokens.
 
 ## How to Export from Figma
 
@@ -101,17 +99,15 @@ When importing, you can specify which mode to use:
 - `--mode shadcn-dark` - Use dark theme values
 - No mode specified - Uses first available mode
 
-## Comparison: Token Studio vs Figma Export
+## What Gets Exported
 
-| Feature | Token Studio Import | Figma Export Modes |
-|---------|-------------------|-------------------|
-| Colors | ✅ | ✅ |
-| Spacing | ❌ | ✅ |
-| Typography | ❌ | ✅ |
-| Border Radii | ❌ | ✅ |
-| Shadows | ❌ | ✅ |
-| Modes | ❌ | ✅ |
-| Complete Export | ❌ | ✅ |
+Figma's "Export modes" captures all variable types:
+- ✅ Colors (raw colors, semantic colors)
+- ✅ Spacing (all spacing tokens)
+- ✅ Typography (font families, sizes, weights, line heights)
+- ✅ Border Radii (all radius values)
+- ✅ Shadows (box shadows, drop shadows)
+- ✅ Modes (light/dark theme values)
 
 ## Troubleshooting
 

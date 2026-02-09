@@ -1,5 +1,5 @@
 import React from 'react';
-import '../app/globals.css';
+import './globals.css';
 import { designTokens } from './design-tokens';
 import { ThemeProvider } from 'next-themes';
 
