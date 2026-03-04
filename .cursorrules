@@ -1,4 +1,4 @@
-## Project: Joe Design System – Token‑Driven Component Library
+## Joe Coffee Design System — Multi-Platform Architecture Rules
 
 ### Cursor Should use MCP
 
@@ -8,269 +8,365 @@ When answering questions or editing code in this workspace, automatically use th
 - Browser MCP for tasks that require running or inspecting the site in the browser (navigation, screenshots, checking layouts).
 Prefer using these tools over unsupported web browsing.
 
-### 1. Goal
+## 1. Goal
 
-Build a token-driven React design system for Joe using Tailwind, shadcn/ui, CVA, Storybook, Chromatic, and Phosphor Icons, with `tokens/joe-tokens.json` as the single source of truth for all styles.
+Evolve the Joe Design System from a single consumer-app library into a multi-platform
+design system that serves:
 
-The design system must:
+1. **Consumer App** — React Native (existing; touch-first, brand-forward)
+2. **Merchant Manager** — React web, desktop-only (current priority; data-dense, utilitarian)
+3. **POS** — Web/Electron (future; speed-first, high-contrast, large tap targets)
 
-- Consume `tokens/joe-tokens.json` and generate:
-    - CSS custom properties (for theming and Storybook).
-    - Tailwind configuration (for utility classes).
-- Expose a set of reusable, accessible React components (based on shadcn/ui + CVA).
-- Document all components and tokens in Storybook and set up Chromatic for visual regression.
+All platforms share the same design token foundation (`tokens/joe-tokens.json`) but
+have **separate component packages** under `packages/`.
 
-***
+The Figma design library is **Obra shadcn/ui kit** (customized). Components in code
+are built on **shadcn/ui + CVA** to stay 1:1 with the Obra Figma components.
 
-### 2. Existing Assets
+---
 
-- Repository: `kevina-ops/Joe-Design-System` (Cursor should open this repo).
-- Token file: `tokens/joe-tokens.json` (current design tokens – treat as source-of-truth, not legacy).
-- Planned stack:
-    - React + Tailwind CSS.
-    - shadcn/ui components.
-    - Class Variance Authority (CVA) for variants.
-    - Storybook.
-    - Chromatic.
-    - Phosphor Icons.
+## 2. Current Workflow — Token Pipeline
 
-***
+1. **Designer** updates Figma Variables inside the Obra-customized Figma file.
+2. **Designer** exports variables from Figma using Figma's built-in export mode (JSON).
+3. **Designer feeds** the exported JSON into Cursor.
+4. **Cursor** translates the Figma Variables JSON into the project's token format
+   and writes/updates `tokens/joe-tokens.json`.
+5. `npm run tokens:build` generates:
+   - `tokens/output/css/variables.css` — CSS custom properties
+   - `tokens/output/tailwind/theme.cjs` — Tailwind theme extension object
+   - (Future) `tokens/output/rn/tokens.js` — React Native theme object
 
-### 3. Architecture Requirements
+**`tokens/joe-tokens.json` is the single source of truth.** Never hard-code color
+hex values, spacing pixel values, or typography values anywhere in component code.
+Always reference tokens through CSS variables or Tailwind theme keys.
 
-#### 3.1 File/Folder Structure
+---
 
-Cursor should organize or adjust the project toward this structure (respecting anything that already exists):
+## 3. Architecture — Monorepo Structure
 
-```text
-.
+Organize or migrate the project toward this structure. Respect anything that already
+exists; adapt paths only when necessary and document deviations.
+
+```
+joe-design-system/
 ├── tokens/
-│   ├── joe-tokens.json          # Source tokens (existing)
-│   └── output/
-│       ├── css/
-│       │   └── variables.css    # Generated CSS vars
-│       └── tailwind/
-│           └── theme.cjs        # Generated Tailwind theme object
-├── src/ or app/
-│   ├── components/
-│   │   └── ui/                  # shadcn-based components
-│   └── lib/
-│       └── utils.ts             # cn() helper, etc.
-├── .storybook/
-│   ├── main.ts
-│   ├── preview.ts
-│   └── design-tokens.ts         # Storybook design-token mapping
+│   ├── joe-tokens.json              # Primitives — from Figma export → Cursor
+│   ├── semantic/
+│   │   ├── shared.json              # Shared semantic tokens (status, text hierarchy)
+│   │   ├── consumer.json            # Consumer app semantic overrides
+│   │   ├── merchant.json            # Merchant Manager semantic overrides
+│   │   └── pos.json                 # POS semantic overrides (placeholder for now)
+│   └── output/                      # GENERATED — do not hand-edit
+│       ├── css/variables.css
+│       ├── tailwind/theme.cjs
+│       └── rn/tokens.js             # Future
+├── packages/
+│   ├── consumer-ui/                 # Consumer app component library
+│   │   ├── src/
+│   │   │   ├── components/ui/       # React Native shadcn-style components
+│   │   │   └── lib/utils.ts         # cn() helper
+│   │   ├── .storybook/
+│   │   └── package.json
+│   ├── merchant-ui/                 # Merchant Manager component library
+│   │   ├── src/
+│   │   │   ├── components/ui/       # React (web) shadcn/Obra components
+│   │   │   └── lib/utils.ts         # cn() helper
+│   │   ├── .storybook/
+│   │   └── package.json
+│   ├── pos-ui/                      # POS component library (scaffold only)
+│   │   └── package.json
+│   └── shared-utils/                # Cross-package utilities
+│       ├── src/
+│       │   ├── cn.ts                # Shared cn() using clsx + tailwind-merge
+│       │   ├── formatters.ts        # Price, date, etc.
+│       │   └── validators.ts
+│       └── package.json
+├── scripts/
+│   └── build-tokens.mjs             # Style Dictionary / custom token builder
 ├── .github/
 │   └── workflows/
-│       ├── tokens-sync.yml
-│       └── chromatic.yml
-└── package.json
+│       ├── tokens-sync.yml          # Rebuild tokens on joe-tokens.json change
+│       └── chromatic.yml            # Visual regression for each package
+└── package.json                     # Root workspace config
 ```
 
-If the repo uses a slightly different structure, adapt paths but keep the same concepts.
+---
 
-***
+## 4. Token Architecture — Three Layers
 
-### 4. Token Pipeline – Implementation Tasks
+### 4.1 Primitives (`tokens/joe-tokens.json`)
+Raw, brand-agnostic values: color scales, spacing scale, font families, font sizes,
+font weights, line heights, radii, shadows, sizes. These are the building blocks
+and should NEVER be referenced directly in component code.
 
-**Objective:** Turn `tokens/joe-tokens.json` into build-time artifacts for CSS variables and Tailwind theme configuration using `token-transformer` + `style-dictionary` (or another small script pipeline with equivalent behavior).
+### 4.2 Semantic Tokens (`tokens/semantic/`)
+Meaningful names that alias primitives. These ARE what components consume.
 
-#### 4.1 Dependencies
+**`shared.json`** — Base semantics shared by all platforms:
+- `color.text.primary` → `colors.black`
+- `color.status.success` → `colors.green.500`
+- `color.status.error` → `colors.red.500`
+- `color.action.primary` → `colors.blue.500`
+- `color.border.default` → `colors.grey.200`
 
-Cursor should ensure these dev dependencies exist (adding them if missing):
+**`merchant.json`** — Overrides for Merchant Manager:
+- Tighter spacing defaults (desktop-optimized)
+- Smaller border radii (8px instead of 16px for cards)
+- Denser typography (body2 at 0.875rem default instead of body1)
+- Muted background surfaces (`colors.grey.50` default)
 
-- `style-dictionary`
-- `token-transformer`
+**`pos.json`** — Overrides for POS (scaffold now, populate later):
+- Larger touch targets (52px+ buttons)
+- High-contrast status indicators
+- Bolder text weights
+
+### 4.3 Component Tokens (inside each package)
+Per-component tokens like `button.primary.background` live within each package's
+Tailwind config or CSS, referencing semantic tokens. Not shared across packages.
+
+---
+
+## 5. Token Pipeline — Build Script
+
+### 5.1 Dependencies
+Ensure these exist (add if missing):
+- `style-dictionary` (or keep the existing custom build script)
 - `class-variance-authority`
 - `clsx`
 - `tailwind-merge`
-- `@storybook/react` + Storybook essentials and a11y addons
+- `@storybook/react`, Storybook essentials, `@storybook/addon-a11y`
 - `storybook-design-token`
 - `chromatic`
 - `@phosphor-icons/react`
 
+### 5.2 Build Script (`scripts/build-tokens.mjs`)
+The build script must:
+1. Read `tokens/joe-tokens.json` (primitives).
+2. Read `tokens/semantic/shared.json` + the platform-specific override
+   (determined by a `--platform` flag or env variable).
+3. Resolve references (semantic → primitive).
+4. Output:
+   - `tokens/output/css/variables.css` — `:root { --token-name: value; }`
+   - `tokens/output/tailwind/theme.cjs` — JS object for `theme.extend`
+5. Support `--platform consumer|merchant|pos` to apply the correct semantic
+   overrides. Default to `shared` (no overrides) if no flag is passed.
 
-#### 4.2 Token Transformation
-
-1. Create a script (Node/TS) that:
-    - Reads `tokens/joe-tokens.json`.
-    - Uses `token-transformer` (or a small custom mapper) to:
-        - Resolve references.
-        - Expand typography/shadow/composite tokens.
-    - Writes:
-        - `tokens/output/css/variables.css` – all tokens as `:root { --token-name: value; }`.
-        - `tokens/output/tailwind/theme.cjs` – a JS object compatible with Tailwind’s `theme.extend` for `colors`, `spacing`, `fontSize`, `fontFamily`, `borderRadius`, etc.
-2. Add npm scripts:
+### 5.3 NPM Scripts
 ```json
 {
   "scripts": {
     "tokens:build": "node scripts/build-tokens.mjs",
-    "tokens:watch": "node scripts/build-tokens.mjs --watch"
+    "tokens:build:consumer": "node scripts/build-tokens.mjs --platform consumer",
+    "tokens:build:merchant": "node scripts/build-tokens.mjs --platform merchant",
+    "tokens:build:pos": "node scripts/build-tokens.mjs --platform pos"
   }
 }
 ```
 
-Cursor should implement `scripts/build-tokens.mjs` in the repo.
+---
 
-***
+## 6. Merchant Manager UI Package — Current Priority
 
-### 5. Tailwind Integration
+### 6.1 Setup
+Create `packages/merchant-ui/` as a React (web) package:
+- Use Next.js + Tailwind CSS + shadcn/ui + CVA.
+- Import the generated Tailwind theme from `tokens/output/tailwind/theme.cjs`.
+- Import CSS variables from `tokens/output/css/variables.css`.
 
-Update `tailwind.config.(js|ts)` so it:
+### 6.2 Components to Build
+The Merchant Manager needs desktop-optimized, data-heavy components.
+Build these in `packages/merchant-ui/src/components/ui/`:
 
-- Imports the generated theme object from `tokens/output/tailwind/theme.cjs`.
-- Uses it in `theme.extend`:
+**Core (shared patterns with consumer, but web-specific implementations):**
+- `button.tsx` — primary, secondary, outline, ghost, destructive; sizes sm/md/lg/icon
+- `input.tsx` — text, password, email, search; with label, error, helper text
+- `card.tsx` — content container with header, body, footer
+- `badge.tsx` — status indicators
+- `alert.tsx` — info, success, warning, error
+- `dialog.tsx` — modal dialogs
+- `toast.tsx` — notifications
 
-```ts
-import joeTheme from "./tokens/output/tailwind/theme.cjs";
+**Merchant-specific (do NOT exist in consumer-ui):**
+- `data-table.tsx` — sortable, filterable, paginated tables for reports/products/orders
+- `sidebar.tsx` — persistent navigation for desktop layout
+- `command.tsx` — command palette / search (shadcn command component)
+- `tabs.tsx` — for switching between sections (store settings, reports, etc.)
+- `dropdown-menu.tsx` — context menus, actions menus
+- `select.tsx` — single and multi-select for filters and forms
+- `form.tsx` — form wrapper with validation patterns (React Hook Form compatible)
+- `date-picker.tsx` — for report date ranges
+- `stats-card.tsx` — metric card (revenue, orders, tips display)
+- `file-upload.tsx` — for store logos, banners, product images
 
-const config = {
-  content: ["./app/**/*.{ts,tsx,js,jsx}", "./src/**/*.{ts,tsx,js,jsx}", "./components/**/*.{ts,tsx,js,jsx}"],
-  theme: {
-    extend: {
-      ...joeTheme
-    }
-  },
-  plugins: []
-};
+### 6.3 Merchant Semantic Token Overrides
+In `tokens/semantic/merchant.json`, define overrides that make the Merchant Manager
+feel denser and more utilitarian than the consumer app:
 
-export default config;
-```
-
-Global CSS should import the generated token variables:
-
-```css
-@import "../tokens/output/css/variables.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-Cursor must verify and fix paths based on the actual project layout.
-
-***
-
-### 6. Component System (shadcn + CVA)
-
-**Goal:** Implement a first set of primitive components using shadcn/ui patterns and CVA, wired to the new tokens.
-
-#### 6.1 Utilities
-
-Create `src/lib/utils.ts` (if not present) with:
-
-- `cn` helper using `clsx` + `tailwind-merge`.
-
-
-#### 6.2 Components to Implement First
-
-Using shadcn/ui as a base, create or refactor components under `src/components/ui/`:
-
-1. `button.tsx`
-2. `input.tsx`
-3. `card.tsx`
-4. `badge.tsx`
-5. `alert.tsx`
-
-For each:
-
-- Use `cva` to define `variant` and `size` options.
-- Map variant styling to Tailwind classes that are built from the Joe tokens (colors, spacing, typography). Cursor should reference CSS variables (e.g. `bg-[hsl(var(--joe-color-primary))]`) or Tailwind config keys created from tokens.
-- Ensure components are fully typed with `VariantProps<typeof cvaConfig>`.
-
-Example requirement for `Button`:
-
-- `variant`: `primary`, `secondary`, `outline`, `ghost`, `destructive`.
-- `size`: `sm`, `md`, `lg`, `icon`.
-- Accepts an optional `leftIcon`/`rightIcon` prop for Phosphor icons.
-
-Cursor should read `joe-tokens.json` and choose the correct token names for primary, secondary, destructive, etc., documenting any assumptions in comments.
-
-***
-
-### 7. Icons (Phosphor)
-
-- Install `@phosphor-icons/react`.
-- Ensure Button and other components can consume icons via children or dedicated props.
-- Add at least one Storybook story that uses a Phosphor icon to confirm integration.
-
-***
-
-### 8. Storybook Setup
-
-**Goal:** Have a fully functioning Storybook that shows components and exposes design tokens.[^4][^5]
-
-Tasks for Cursor:
-
-1. If Storybook is not initialized, run an equivalent of `npx storybook@latest init` (generate config files programmatically in the repo).
-2. Configure `.storybook/main.ts` to:
-    - Use React framework.
-    - Include addons: `@storybook/addon-essentials`, `@storybook/addon-a11y`, `storybook-design-token`.
-3. Configure `.storybook/preview.ts` to:
-    - Import global styles (including tokens CSS).
-    - Set light/dark backgrounds matching the design system.
-    - Configure `parameters.designToken` to use a mapping from `design-tokens.ts`.
-4. Create `.storybook/design-tokens.ts` that:
-    - Imports `tokens/output/css/variables.css` or a parsed representation.
-    - Exposes at least:
-        - Color tokens.
-        - Spacing tokens.
-        - Typography tokens.
-    - Uses the `storybook-design-token` format so tokens are visible in the “Design Tokens” tab.
-5. For each component created:
-    - Add a `*.stories.tsx` file with:
-        - A default story with controls for `variant` and `size`.
-        - Example states (with icons, loading/disabled, error, etc.).
-    - Ensure stories are typed with `Meta` and `StoryObj`.
-
-***
-
-### 9. Chromatic \& CI
-
-**Goal:** Automatic visual regression tests on every push.
-
-Cursor should:
-
-1. Add `chromatic` dev dependency and a script:
 ```json
 {
-  "scripts": {
-    "chromatic": "chromatic --project-token=<TO_FILL_MANUALLY>"
+  "spacing": {
+    "page-padding": { "value": "{space.s}", "description": "12px — tighter than consumer's 16px" },
+    "card-padding": { "value": "{space.m}", "description": "16px" }
+  },
+  "borderRadius": {
+    "card": { "value": "{radii.xs}", "description": "8px — sharper than consumer's 16px" },
+    "button": { "value": "{radii.xxs}", "description": "6px" },
+    "input": { "value": "{radii.xxs}", "description": "6px" }
+  },
+  "fontSize": {
+    "body-default": { "value": "{fontSizes.body2}", "description": "0.875rem — denser" }
+  },
+  "color": {
+    "background": {
+      "default": { "value": "{colors.grey.50}", "description": "Light grey surface for desktop" },
+      "surface": { "value": "{colors.white}", "description": "Card/panel background" }
+    }
   }
 }
 ```
 
-2. Create `.github/workflows/chromatic.yml` that:
-    - Checks out the repo.
-    - Installs dependencies.
-    - Runs `npm run tokens:build`.
-    - Builds and publishes Storybook through `chromatic` (token to be provided manually later).
-3. Create `.github/workflows/tokens-sync.yml` that:
-    - Runs on pushes that affect `tokens/joe-tokens.json`.
-    - Executes `npm run tokens:build`.
-    - Commits generated files in `tokens/output/**` back to the repo.
+### 6.4 CVA Pattern for Merchant Components
+Every component follows the CVA pattern. Here is the Button template for
+Merchant Manager (adapt for each component):
 
-CI workflows should be small and self‑contained; Cursor must ensure they work with the current `package.json` scripts.
+```tsx
+// packages/merchant-ui/src/components/ui/button.tsx
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-***
+const buttonVariants = cva(
+  // Base: all variants
+  "inline-flex items-center justify-center font-medium transition-colors " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 " +
+  "disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        // Map to semantic token Tailwind classes, NOT raw hex values
+        primary:   "bg-action-primary text-white hover:bg-action-primaryHover",
+        secondary: "bg-background-surface text-text-primary border border-border-default hover:bg-background-muted",
+        outline:   "border border-action-primary text-action-primary hover:bg-action-primary hover:text-white",
+        ghost:     "hover:bg-background-muted hover:text-text-primary",
+        destructive: "bg-status-error text-white hover:bg-status-error/90",
+      },
+      size: {
+        sm:   "h-9 rounded-md px-3 text-sm",   // Uses merchant radii
+        md:   "h-10 rounded-md px-4 text-sm",
+        lg:   "h-11 rounded-md px-6 text-base",
+        icon: "h-10 w-10 rounded-md",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  }
+);
+```
 
-### 10. Constraints \& Non‑Goals
+Component class names must reference Tailwind keys generated from tokens, NEVER
+hard-coded colors like `bg-[#3DA1F8]`.
 
-- Do not rename or move `tokens/joe-tokens.json` without explicit instruction.
-- Do not introduce a new design-system framework; stick to React + Tailwind + shadcn + CVA.
-- Mobile/React Native and Swift/Kotlin support are **future** work; however, keep token outputs modular so a `react-native`/`ios`/`android` platform can be added later via Style Dictionary.
+---
 
-***
+## 7. Storybook — Per Package
 
-### 11. How Cursor Should Work
+### 7.1 Each Package Gets Its Own Storybook
+- `packages/consumer-ui/.storybook/` — mobile component docs
+- `packages/merchant-ui/.storybook/` — desktop component docs
+- (Future) `packages/pos-ui/.storybook/`
 
-When I ask Cursor to “implement the PRD” or similar, it should:
+### 7.2 Shared Storybook Configuration Pattern
+Each Storybook should:
+1. Import the platform's generated CSS variables.
+2. Use `storybook-design-token` addon to expose tokens in the Design Token tab.
+3. Use `@storybook/addon-a11y` for accessibility checks.
+4. Set light/dark background options matching the design system.
 
-1. Read this PRD and the existing repo files.
-2. Generate or modify files in small, reviewable steps (per feature/section).
-3. Explain in each change:
-    - What part of the PRD it is implementing.
-    - Which tokens from `joe-tokens.json` are being used for which purpose (e.g., “Button primary background uses `color.brand.primary`”).
-4. Keep code idiomatic, well‑typed (TypeScript), and documented where token mappings are non‑obvious.
+### 7.3 Stories Requirements
+For each component, create a `.stories.tsx` file with:
+- Default story with controls for variant and size.
+- All variant combinations.
+- Disabled / loading / error states.
+- At least one story using a Phosphor icon.
+- Typed with `Meta` and `StoryObj`.
 
-***
+---
+
+## 8. POS Package — Scaffold Only (Future)
+
+Create `packages/pos-ui/` with:
+- A `package.json` with basic dependencies.
+- An empty `src/components/ui/` directory.
+- A placeholder `tokens/semantic/pos.json` with comments describing intended overrides
+  (larger targets, high contrast, bolder weights).
+
+Do NOT build POS components yet. The scaffold ensures the monorepo structure
+is ready when POS work begins.
+
+---
+
+## 9. CI/CD
+
+### 9.1 Token Sync Workflow (`.github/workflows/tokens-sync.yml`)
+- Triggers on pushes that modify `tokens/joe-tokens.json` or `tokens/semantic/*.json`.
+- Runs `npm run tokens:build` for each platform.
+- Commits regenerated files in `tokens/output/` back to the branch.
+
+### 9.2 Chromatic (`.github/workflows/chromatic.yml`)
+- Runs on push / PR.
+- Builds Storybook for `consumer-ui` and `merchant-ui` separately.
+- Publishes to Chromatic for independent visual regression testing.
+- Leave `CHROMATIC_PROJECT_TOKEN` as a secret placeholder.
+
+---
+
+## 10. Obra Alignment Rules
+
+Since the Figma library is the **Obra shadcn/ui kit** (customized for Joe):
+
+1. Component names in code should match Obra/shadcn naming conventions
+   (e.g., `Button`, `Card`, `Input`, `Dialog`, `DataTable`).
+2. Component variants in code (CVA) should match the variants available
+   in the Obra Figma components (e.g., primary/secondary/outline/ghost/destructive).
+3. When a designer exports a new variable from Figma, Cursor should map it
+   to the existing token structure in `joe-tokens.json`, not create a parallel
+   naming scheme.
+4. The Obra kit uses Tailwind v4 colors as its base palette — when customizing
+   the Obra kit for Joe, those are replaced with Joe's primitives. Code must
+   mirror this: use Joe token classes, not default Tailwind color classes.
+
+---
+
+## 11. Constraints & Non-Goals
+
+- Do NOT rename or move `tokens/joe-tokens.json` without explicit instruction.
+- Do NOT introduce another component/styling framework beyond React + Tailwind + shadcn/ui + CVA.
+- Do NOT build React Native or Swift/Kotlin components yet — but keep token pipeline
+  modular so `--platform rn` or `--platform ios` can be added later.
+- Do NOT duplicate components across packages. If consumer-ui and merchant-ui both
+  need a `Button`, they each get their own implementation wired to their own semantic
+  tokens. Shared logic (formatters, validators, `cn()`) goes in `shared-utils`.
+- Do NOT add platform conditionals inside components (e.g., `if (platform === 'merchant')`).
+  Each package is self-contained.
+
+---
+
+## 12. How Cursor Should Work
+
+1. **Read these rules and the existing repo** before making changes.
+2. **Implement in small, reviewable steps**, referencing the section number
+   (e.g., "Implementing §6.2 — merchant data-table component").
+3. **Prefer TypeScript**; keep types accurate.
+4. **Explain token mappings** in code comments when the relationship between a
+   token name and its visual purpose is not obvious.
+5. **When I paste Figma Variables JSON**, translate it into the `joe-tokens.json`
+   format, preserving the existing naming convention (`colors.blue.500`, `space.m`,
+   `fontSizes.heading1`, etc.). Flag any new tokens that don't fit the existing
+   structure.
+6. **When building merchant-ui components**, always check if a similar component
+   exists in consumer-ui. Reuse the same CVA variant names where applicable for
+   cross-platform consistency, but implement independently.
+7. **Run `npm run tokens:build:merchant`** after any token change to verify the
+   pipeline works before proceeding to component work.
