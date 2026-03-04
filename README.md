@@ -1,133 +1,96 @@
 # Joe Design System
 
-Token-driven React component library for Joe Coffee. Built with Tailwind CSS, shadcn-style components (CVA), Storybook 10, and design tokens from a single source of truth.
+Token-driven multi-platform design system for Joe Coffee.
+
+This repository is now a pnpm + Turborepo monorepo with platform-specific packages for Consumer, Merchant Manager, and POS.
+
+## Current Architecture
+
+- **Monorepo packages**
+  - `@joe-coffee/consumer-ui` → `packages/consumer-ui`
+  - `@joe-coffee/merchant-ui` → `packages/merchant-ui`
+  - `@joe-coffee/pos-ui` → `packages/pos-ui`
+  - `@joe-coffee/shared-utils` → `packages/shared-utils`
+- **Token pipeline**
+  - source: `tokens/joe-tokens.json` + `tokens/semantic/*.json`
+  - build script: `scripts/build-tokens.mjs`
+  - outputs: `tokens/output/css/variables.css`, `tokens/output/tailwind/theme.cjs`
+- **Storybook ownership**
+  - root `.storybook` has been removed
+  - each package owns its own `.storybook`
+- **CI visual testing**
+  - Chromatic runs as a matrix job in `.github/workflows/chromatic.yml`
+  - one Chromatic token per package/platform
 
 ## Requirements
 
-- **Node.js 20.19+** (or 22.12+). Required for Storybook 10 and `storybook-design-token` v5.
-- **nvm** (Node Version Manager) recommended for automatic Node version switching
+- Node.js `>=20`
+- pnpm `9.x` (defined via `packageManager`)
+- nvm recommended (`.nvmrc` included)
 
-### Setting up Node.js
+## Install & Setup
 
-This project includes an `.nvmrc` file that automatically tells nvm to use Node.js 20.
-
-**First time setup:**
 ```bash
-# Install Node.js 20 if you don't have it
-nvm install 20
-
-# Use Node.js 20 (this will happen automatically when you cd into the project)
 nvm use
+pnpm install
+pnpm run tokens:build
 ```
 
-**Automatic switching:** If you have nvm's auto-switch enabled (add to your `~/.zshrc` or `~/.bashrc`):
+## Key Scripts (root)
+
+| Script                           | Description                                     |
+| -------------------------------- | ----------------------------------------------- |
+| `pnpm run tokens:build`          | Build shared token outputs                      |
+| `pnpm run tokens:build:consumer` | Build consumer tokens                           |
+| `pnpm run tokens:build:merchant` | Build merchant tokens                           |
+| `pnpm run tokens:build:pos`      | Build pos tokens                                |
+| `pnpm run storybook`             | Run all package Storybooks via Turbo            |
+| `pnpm run build-storybook`       | Build all package Storybooks via Turbo          |
+| `pnpm run chromatic:consumer`    | Build + publish consumer Storybook to Chromatic |
+| `pnpm run chromatic:merchant`    | Build + publish merchant Storybook to Chromatic |
+| `pnpm run chromatic:pos`         | Build + publish pos Storybook to Chromatic      |
+
+## Run Storybooks Separately
+
 ```bash
-# Add this to your shell config for automatic switching
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+pnpm --filter @joe-coffee/consumer-ui run storybook   # http://localhost:6006
+pnpm --filter @joe-coffee/merchant-ui run storybook   # http://localhost:6007
+pnpm --filter @joe-coffee/pos-ui run storybook        # http://localhost:6008
 ```
 
-Or simply run `nvm use` manually when you enter the project directory.
+## Project Structure
 
-## Tech stack
-
-- **Tokens**: `tokens/joe-tokens.json` → CSS variables + Tailwind theme via `scripts/build-tokens.mjs`
-- **Styling**: Tailwind CSS, semantic variables in `.storybook/globals.css`
-- **Components**: React, CVA, `tailwind-merge` + `cn()`; Phosphor Icons
-- **Docs**: Storybook 10 (Webpack), addon-a11y, storybook-design-token
-
-## Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run tokens:build` | Build CSS variables and Tailwind theme from `tokens/joe-tokens.json` |
-| `npm run tokens:watch` | Watch tokens and rebuild on change |
-| `npm run tokens:import-obra` | Import Obra tokens from Figma export |
-| `npm run tokens:import-figma` | Import Figma variables from "Export modes" (all types - recommended) |
-| `npm run components:generate` | Generate all shadcn/ui components with Storybook stories |
-| `npm run components:generate:single` | Generate a single component (e.g., `npm run components:generate:single input`) |
-| `npm run storybook` | Storybook dev server (port 6006) |
-| `npm run build-storybook` | Build static Storybook |
-
-## Project structure
-
-```
-├── src/
-│   ├── components/ui/      # UI components (Button, etc.) + stories
-│   └── lib/utils.ts        # cn() helper
-├── tokens/
-│   ├── joe-tokens.json     # Source of truth (edit here)
-│   └── output/             # Generated CSS + Tailwind theme (do not edit)
-├── .storybook/             # Storybook 10 config (main.ts ESM, preview.js, design-tokens.ts, globals.css)
-├── scripts/build-tokens.mjs
-├── tailwind.config.cjs     # Tailwind config (used by Storybook PostCSS)
-├── postcss.config.mjs      # PostCSS config (for Tailwind processing)
-└── tsconfig.json           # TypeScript configuration
+```text
+packages/
+  consumer-ui/
+  merchant-ui/
+  pos-ui/
+  shared-utils/
+tokens/
+  joe-tokens.json
+  semantic/
+  output/
+scripts/
+  build-tokens.mjs
+.github/workflows/
+  chromatic.yml
+  tokens-sync.yml
 ```
 
-- **Tailwind**: `tailwind.config.cjs` is used by Storybook's PostCSS for processing CSS with Tailwind.
+## Chromatic Setup
 
-## Development
+Configure these GitHub Actions secrets:
 
-**First time setup:**
-```bash
-# Make sure you're using Node.js 20
-nvm use  # This will automatically use Node.js 20 from .nvmrc
+- `CHROMATIC_PROJECT_TOKEN_CONSUMER`
+- `CHROMATIC_PROJECT_TOKEN_MERCHANT`
+- `CHROMATIC_PROJECT_TOKEN_POS`
 
-# Install dependencies
-npm install
+For local convenience, see `.env.example`.
 
-# Build tokens
-npm run tokens:build
-```
+## Tokens & Figma Sync
 
-**Daily workflow:**
-1. `nvm use` - Switch to Node.js 20 (or configure auto-switching - see Requirements above)
-2. `npm run storybook` - Start Storybook → http://localhost:6006
-3. `npm run tokens:watch` - Watch tokens and rebuild on change (optional)
+- Docs: `tokens/README.md`
+- Figma import: `pnpm run tokens:import-figma-folder`
+- Then rebuild tokens: `pnpm run tokens:build`
 
-## Tokens
-
-Design tokens are documented in [tokens/README.md](tokens/README.md). Edit `tokens/joe-tokens.json`, then run `npm run tokens:build`. Generated files go to `tokens/output/` (CSS variables and Tailwind theme).
-
-### Obra shadcn/ui Integration
-
-This project integrates with the [Obra shadcn/ui Figma kit](https://shadcn.obra.studio/) for design-to-code synchronization.
-
-**Documentation:**
-- [Obra Quick Start](tokens/docs/obra_quick_start.md) - Fast-track setup guide
-- [Obra Guide](tokens/docs/obra_guide.md) - Complete integration and workflow guide
-- [Figma Export Guide](tokens/docs/figma_export_guide.md) - Export tokens from Figma
-
-**Quick start (Figma → Code):**
-1. Export tokens from Figma Variables panel ("Export modes")
-2. Import: `npm run tokens:import-figma-folder`
-3. Build: `npm run tokens:build`
-4. Generate components: `npm run components:generate`
-5. View in Storybook: `npm run storybook`
-
-**⚠️ Important:** Obra Figma is the source of truth. Always sync FROM Obra TO Storybook, never the reverse. See [Obra Guide](tokens/docs/obra_guide.md) for details.
-
-**Quick start (Obra → Storybook):**
-1. Export from Obra: Variables panel → "Export modes" → Save to `tokens/obra-variables-figma-export/`
-2. Import: `npm run tokens:import-figma-folder`
-3. Build: `npm run tokens:build`
-4. View: `npm run storybook`
+Obra/Figma is the source of truth; sync design → code.

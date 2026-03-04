@@ -39,6 +39,3 @@ debug-storybook.log
 
 # Token backups (created by import scripts)
 tokens/joe-tokens.json.backup
-
-# Token backups (created by import scripts)
-tokens/joe-tokens.json.backup

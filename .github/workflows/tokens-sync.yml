@@ -1,0 +1,39 @@
+name: Token Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tokens/**"
+  workflow_dispatch:
+
+jobs:
+  build-tokens:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [consumer, merchant, pos]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build tokens for ${{ matrix.platform }}
+        run: node scripts/build-tokens.mjs --platform ${{ matrix.platform }}
+
+      - name: Upload token artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tokens-${{ matrix.platform }}
+          path: tokens/output/

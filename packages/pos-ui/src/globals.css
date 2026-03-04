@@ -1,0 +1,24 @@
+@import "../../../tokens/output/css/variables.css";
+
+:root {
+    --background: var(--joe-semantic-color-background-default);
+    --foreground: var(--joe-semantic-color-text-general-foreground);
+    --primary: var(--joe-semantic-color-action-primary);
+    --primary-foreground: var(--joe-semantic-color-text-inverse);
+    --secondary: var(--joe-semantic-color-action-secondary);
+    --secondary-foreground: var(--joe-semantic-color-text-primary);
+    --destructive: var(--joe-semantic-color-action-destructive);
+    --destructive-foreground: var(--joe-semantic-color-text-inverse);
+    --accent: var(--joe-semantic-color-action-ghostHover);
+    --accent-foreground: var(--joe-semantic-color-text-general-accent-foreground);
+    --muted: var(--joe-primitives-colors-grey-100);
+    --muted-foreground: var(--joe-semantic-color-text-secondary);
+    --border: var(--joe-semantic-color-border-default);
+    --input: var(--joe-semantic-color-border-default);
+    --ring: var(--joe-semantic-color-border-focus);
+    --radius: 0.5rem;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

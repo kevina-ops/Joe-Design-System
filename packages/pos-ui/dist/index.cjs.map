@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.ts"],"sourcesContent":["/**\n * @joe-coffee/pos-ui\n * \n * POS system UI components for the Joe Coffee design system.\n * This package is a placeholder for future development.\n */\n\nexport { cn } from \"@joe-coffee/shared-utils\";\n"],"mappings":";;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAOA,0BAAmB;","names":[]}

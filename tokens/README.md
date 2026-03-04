@@ -2,15 +2,15 @@
 
 This folder is the **single source of truth** for design token.
 
-Generated output is used by: **Storybook** and components via **`.storybook/globals.css`**.
+Generated output is used by: **Storybook** and components via **`packages/*/src/globals.css`**.
 
 ## Files
 
-| File | Role |
-|------|------|
-| `joe-tokens.json` | Source tokens (W3C format). Edited by designers/devs or synced from Figma. |
-| `output/css/variables.css` | Generated CSS custom properties (DO NOT EDIT THIS!!). |
-| `output/tailwind/theme.cjs` | Generated Tailwind theme (DO NOT EDIT THIS!!!). |
+| File                        | Role                                                                       |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `joe-tokens.json`           | Source tokens (W3C format). Edited by designers/devs or synced from Figma. |
+| `output/css/variables.css`  | Generated CSS custom properties (DO NOT EDIT THIS!!).                      |
+| `output/tailwind/theme.cjs` | Generated Tailwind theme (DO NOT EDIT THIS!!!).                            |
 
 Generated files are produced by `npm run tokens:build` (see `scripts/build-tokens.mjs`).
 

@@ -9,6 +9,26 @@ on:
 jobs:
   chromatic:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: consumer
+            package_name: "@joe-coffee/consumer-ui"
+            package_dir: "packages/consumer-ui"
+            platform: "consumer"
+            token_secret: "CHROMATIC_PROJECT_TOKEN_CONSUMER"
+          - name: merchant
+            package_name: "@joe-coffee/merchant-ui"
+            package_dir: "packages/merchant-ui"
+            platform: "merchant"
+            token_secret: "CHROMATIC_PROJECT_TOKEN_MERCHANT"
+          - name: pos
+            package_name: "@joe-coffee/pos-ui"
+            package_dir: "packages/pos-ui"
+            platform: "pos"
+            token_secret: "CHROMATIC_PROJECT_TOKEN_POS"
+    name: chromatic-${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,16 +38,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Build tokens
-        run: npm run tokens:build
+      - name: Build tokens for ${{ matrix.platform }}
+        run: pnpm run tokens:build:${{ matrix.platform }}
 
-      - name: Publish to Chromatic
+      - name: Build Storybook (${{ matrix.name }})
+        run: pnpm --filter ${{ matrix.package_name }} run build-storybook
+
+      - name: Publish to Chromatic (${{ matrix.name }})
         uses: chromaui/action@latest
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ secrets[matrix.token_secret] }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          workingDir: ${{ matrix.package_dir }}
+          storybookBuildDir: storybook-static
+          onlyChanged: true

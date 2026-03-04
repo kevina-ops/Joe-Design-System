@@ -3,9 +3,18 @@
 /**
  * Token Build Script
  * 
- * Reads tokens/joe-tokens.json and generates:
+ * Reads tokens/joe-tokens.json (primitives) and tokens/semantic/ files, then generates:
  * - tokens/output/css/variables.css (CSS custom properties)
  * - tokens/output/tailwind/theme.cjs (Tailwind theme configuration)
+ * 
+ * Usage:
+ *   node scripts/build-tokens.mjs                   # shared (no platform overrides)
+ *   node scripts/build-tokens.mjs --platform consumer
+ *   node scripts/build-tokens.mjs --platform merchant
+ *   node scripts/build-tokens.mjs --platform pos
+ *   node scripts/build-tokens.mjs --watch
+ * 
+ * Merge order: primitives → semantic/shared.json → semantic/<platform>.json
  * 
  * Part of PRD Section 4.2: Token Transformation
  */
@@ -18,7 +27,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
+// --- CLI args ---
+const args = process.argv.slice(2);
+const platformIdx = args.indexOf('--platform');
+const PLATFORM = platformIdx !== -1 ? args[platformIdx + 1] : null;
+const VALID_PLATFORMS = ['consumer', 'merchant', 'pos'];
+
+if (PLATFORM && !VALID_PLATFORMS.includes(PLATFORM)) {
+  console.error(`❌ Invalid platform "${PLATFORM}". Valid: ${VALID_PLATFORMS.join(', ')}`);
+  process.exit(1);
+}
+
+// --- Paths ---
 const TOKENS_FILE = path.join(rootDir, 'tokens', 'joe-tokens.json');
+const SEMANTIC_SHARED = path.join(rootDir, 'tokens', 'semantic', 'shared.json');
+const SEMANTIC_PLATFORM = PLATFORM
+  ? path.join(rootDir, 'tokens', 'semantic', `${PLATFORM}.json`)
+  : null;
 const CSS_OUTPUT_DIR = path.join(rootDir, 'tokens', 'output', 'css');
 const CSS_OUTPUT_FILE = path.join(CSS_OUTPUT_DIR, 'variables.css');
 const TAILWIND_OUTPUT_DIR = path.join(rootDir, 'tokens', 'output', 'tailwind');
@@ -31,6 +56,46 @@ function ensureDirectories() {
       fs.mkdirSync(dir, { recursive: true });
     }
   });
+}
+
+/**
+ * Deep-merge two objects. `source` values override `target` on conflict.
+ * Only plain objects are recursed; leaf values (strings, numbers, arrays) are replaced.
+ */
+function deepMerge(target, source) {
+  const result = { ...target };
+  for (const [key, val] of Object.entries(source)) {
+    if (key.startsWith('_')) continue; // skip meta keys like _comment
+    if (
+      val && typeof val === 'object' && !Array.isArray(val) &&
+      result[key] && typeof result[key] === 'object' && !Array.isArray(result[key])
+    ) {
+      result[key] = deepMerge(result[key], val);
+    } else {
+      result[key] = val;
+    }
+  }
+  return result;
+}
+
+/**
+ * Load and merge semantic tokens: shared.json ← <platform>.json
+ */
+function loadSemanticTokens() {
+  if (!fs.existsSync(SEMANTIC_SHARED)) {
+    console.warn('⚠️  tokens/semantic/shared.json not found; falling back to inline semantic from joe-tokens.json');
+    return null; // caller will use inline semantic
+  }
+
+  let semantic = JSON.parse(fs.readFileSync(SEMANTIC_SHARED, 'utf-8'));
+
+  if (SEMANTIC_PLATFORM && fs.existsSync(SEMANTIC_PLATFORM)) {
+    const platformTokens = JSON.parse(fs.readFileSync(SEMANTIC_PLATFORM, 'utf-8'));
+    semantic = deepMerge(semantic, platformTokens);
+    console.log(`🔀 Merged platform overrides from ${path.basename(SEMANTIC_PLATFORM)}`);
+  }
+
+  return semantic;
 }
 
 /**
@@ -58,17 +123,17 @@ function normalizeToLegacy(obj) {
 function resolveTokenReferences(tokens, maxPasses = 10) {
   // First, create a deep copy
   let resolved = JSON.parse(JSON.stringify(tokens));
-  
+
   // Resolve references in multiple passes until no more references remain
   for (let pass = 0; pass < maxPasses; pass++) {
     let hasReferences = false;
-    
+
     const resolveValue = (obj) => {
       if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
         if (obj.value !== undefined) {
           // This is a token with a value
           let tokenValue = obj.value;
-          
+
           // Resolve references in the format {primitives.colors.white}
           if (typeof tokenValue === 'string' && tokenValue.startsWith('{') && tokenValue.endsWith('}')) {
             const refPath = tokenValue.slice(1, -1);
@@ -86,14 +151,14 @@ function resolveTokenReferences(tokens, maxPasses = 10) {
         }
       }
     };
-    
+
     resolveValue(resolved);
-    
+
     if (!hasReferences) {
       break;
     }
   }
-  
+
   return resolved;
 }
 
@@ -104,7 +169,7 @@ function resolveTokenReferences(tokens, maxPasses = 10) {
 function getNestedValue(obj, path) {
   const parts = path.split('.');
   let current = obj;
-  
+
   for (const key of parts) {
     if (current && current[key] !== undefined) {
       current = current[key];
@@ -112,7 +177,7 @@ function getNestedValue(obj, path) {
       return undefined;
     }
   }
-  
+
   // If the final value is a token object, return value ($value or value)
   if (current && typeof current === 'object') {
     const v = current.value ?? current.$value;
@@ -151,7 +216,7 @@ function tokenPathToTailwindPath(path) {
 function flattenTokens(tokens, prefix = '', result = {}) {
   for (const [key, value] of Object.entries(tokens)) {
     const currentPath = prefix ? `${prefix}.${key}` : key;
-    
+
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       const tokenVal = value.value ?? value.$value;
       if (tokenVal !== undefined) {
@@ -163,7 +228,7 @@ function flattenTokens(tokens, prefix = '', result = {}) {
       }
     }
   }
-  
+
   return result;
 }
 
@@ -189,11 +254,11 @@ const CSS_TOKEN_CATEGORIES = [
 function generateCSSVariables(resolvedTokens) {
   const flatTokens = flattenTokens(resolvedTokens);
   const cssVars = [];
-  
+
   cssVars.push(':root {');
-  
+
   const sortedPaths = Object.keys(flatTokens).sort();
-  
+
   for (const category of CSS_TOKEN_CATEGORIES) {
     const pathsInCategory = sortedPaths.filter((p) => p === category.prefix || p.startsWith(category.prefix + '.'));
     if (pathsInCategory.length === 0) continue;
@@ -212,10 +277,10 @@ function generateCSSVariables(resolvedTokens) {
     }
     cssVars.push('  /* @tokens-end */');
   }
-  
+
   cssVars.push('}');
   cssVars.push('');
-  
+
   return cssVars.join('\n');
 }
 
@@ -237,17 +302,17 @@ function generateTailwindTheme(resolvedTokens) {
     transitionDuration: {},
     transitionTimingFunction: {}
   };
-  
+
   // Process primitives
   if (resolvedTokens.primitives) {
     const primitives = resolvedTokens.primitives;
-    
+
     // Colors
     if (primitives.colors) {
       const processColor = (colors, prefix = '') => {
         for (const [key, value] of Object.entries(colors)) {
           const currentPath = prefix ? `${prefix}.${key}` : key;
-          
+
           const tokenVal = value.value ?? value.$value;
           if (tokenVal !== undefined) {
             // Leaf color value (legacy or W3C DTCG)
@@ -267,7 +332,7 @@ function generateTailwindTheme(resolvedTokens) {
       };
       processColor(primitives.colors);
     }
-    
+
     // Font families
     if (primitives.fonts) {
       for (const [key, value] of Object.entries(primitives.fonts)) {
@@ -311,17 +376,17 @@ function generateTailwindTheme(resolvedTokens) {
       }
     }
   }
-  
+
   // Process semantic tokens
   if (resolvedTokens.semantic) {
     const semantic = resolvedTokens.semantic;
-    
+
     // Semantic colors
     if (semantic.color) {
       const processSemanticColor = (colors, prefix = '') => {
         for (const [key, value] of Object.entries(colors)) {
           const currentPath = prefix ? `${prefix}.${key}` : key;
-          
+
           const tokenVal = value.value ?? value.$value;
           if (tokenVal !== undefined) {
             const tailwindPath = currentPath.split('.');
@@ -340,7 +405,7 @@ function generateTailwindTheme(resolvedTokens) {
       };
       processSemanticColor(semantic.color);
     }
-    
+
     // Semantic spacing
     if (semantic.spacing) {
       for (const [key, value] of Object.entries(semantic.spacing)) {
@@ -363,7 +428,7 @@ function generateTailwindTheme(resolvedTokens) {
       }
     }
   }
-  
+
   // Generate the CommonJS module
   const themeStr = JSON.stringify(theme, null, 2);
   return `/**\n * Generated Tailwind theme from joe-tokens.json\n * Do not edit manually - this file is auto-generated\n */\n\nmodule.exports = ${themeStr};\n`;
@@ -373,38 +438,58 @@ function generateTailwindTheme(resolvedTokens) {
  * Main build function
  */
 function buildTokens() {
-  console.log('🔨 Building tokens...');
-  
+  const label = PLATFORM ? ` [${PLATFORM}]` : ' [shared]';
+  console.log(`🔨 Building tokens${label}...`);
+
   // Ensure output directories exist
   ensureDirectories();
-  
+
   // Read tokens file
   if (!fs.existsSync(TOKENS_FILE)) {
     console.error(`❌ Tokens file not found: ${TOKENS_FILE}`);
     process.exit(1);
   }
-  
+
   const tokensContent = fs.readFileSync(TOKENS_FILE, 'utf-8');
   let tokens = JSON.parse(tokensContent);
+
+  // Load semantic tokens from extracted files (merge shared + platform)
+  const externalSemantic = loadSemanticTokens();
+  if (externalSemantic) {
+    tokens.semantic = externalSemantic;
+  }
+
   // Support both Legacy (type/value) and W3C DTCG ($type/$value) formats
   tokens = normalizeToLegacy(tokens);
   // Resolve token references
   console.log('📝 Resolving token references...');
   const resolvedTokens = resolveTokenReferences(tokens, 10);
-  
+
+  // Warn about unresolved references
+  const flat = flattenTokens(resolvedTokens);
+  const unresolved = Object.entries(flat).filter(
+    ([, v]) => typeof v === 'string' && v.startsWith('{') && v.endsWith('}')
+  );
+  if (unresolved.length > 0) {
+    console.warn(`⚠️  ${unresolved.length} unresolved reference(s):`);
+    for (const [tokenPath, ref] of unresolved) {
+      console.warn(`    ${tokenPath} → ${ref}`);
+    }
+  }
+
   // Generate CSS variables
   console.log('🎨 Generating CSS variables...');
   const cssContent = generateCSSVariables(resolvedTokens);
   fs.writeFileSync(CSS_OUTPUT_FILE, cssContent, 'utf-8');
   console.log(`✅ Generated: ${CSS_OUTPUT_FILE}`);
-  
+
   // Generate Tailwind theme
   console.log('⚡ Generating Tailwind theme...');
   const tailwindContent = generateTailwindTheme(resolvedTokens);
   fs.writeFileSync(TAILWIND_OUTPUT_FILE, tailwindContent, 'utf-8');
   console.log(`✅ Generated: ${TAILWIND_OUTPUT_FILE}`);
-  
-  console.log('✨ Token build complete!');
+
+  console.log(`✨ Token build complete${label}!`);
 }
 
 // Handle watch mode

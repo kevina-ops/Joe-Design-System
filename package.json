@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "description": "Joe Coffee's Design System - Token-driven React component library",
+  "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": "20.x"
+    "node": ">=20"
   },
   "scripts": {
     "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:build:consumer": "node scripts/build-tokens.mjs --platform consumer",
+    "tokens:build:merchant": "node scripts/build-tokens.mjs --platform merchant",
+    "tokens:build:pos": "node scripts/build-tokens.mjs --platform pos",
     "tokens:watch": "node scripts/build-tokens.mjs --watch",
     "tokens:import-obra": "node scripts/import-obra-tokens.mjs",
     "tokens:import-figma": "node scripts/import-figma-variables.mjs",
@@ -15,10 +19,19 @@
     "components:generate": "node scripts/generate-components.mjs --all",
     "components:generate:single": "node scripts/generate-components.mjs --component",
     "preinstall": "node -e \"if(process.version.split('.')[0].slice(1) < 20) throw new Error('Node.js 20+ required. Run: nvm use')\"",
-    "storybook": "npx storybook dev -p 6006",
-    "build-storybook": "npx storybook build",
-    "build:vercel": "npm run tokens:build && npm run build-storybook",
-    "chromatic": "chromatic --project-token=chpt_2baad533b36beb2"
+    "storybook": "turbo run storybook",
+    "build-storybook": "turbo run build-storybook",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "build:vercel": "pnpm run tokens:build:merchant && pnpm --filter merchant-ui build-storybook",
+    "chromatic": "turbo run chromatic",
+    "chromatic:consumer": "pnpm run tokens:build:consumer && pnpm --filter @joe-coffee/consumer-ui run build-storybook && pnpm exec chromatic --project-token $CHROMATIC_PROJECT_TOKEN_CONSUMER --storybook-build-dir packages/consumer-ui/storybook-static",
+    "chromatic:merchant": "pnpm run tokens:build:merchant && pnpm --filter @joe-coffee/merchant-ui run build-storybook && pnpm exec chromatic --project-token $CHROMATIC_PROJECT_TOKEN_MERCHANT --storybook-build-dir packages/merchant-ui/storybook-static",
+    "chromatic:pos": "pnpm run tokens:build:pos && pnpm --filter @joe-coffee/pos-ui run build-storybook && pnpm exec chromatic --project-token $CHROMATIC_PROJECT_TOKEN_POS --storybook-build-dir packages/pos-ui/storybook-static",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -68,11 +81,12 @@
     "postcss-loader": "^8.2.0",
     "storybook": "^10.2.3",
     "storybook-design-token": "^5.0.0",
-    "style-dictionary": "^4.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "token-transformer": "^0.0.27",
-    "typescript": "^5.5.0"
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0",
+    "@changesets/cli": "^2.27.0",
+    "autoprefixer": "^10.4.20"
   }
 }

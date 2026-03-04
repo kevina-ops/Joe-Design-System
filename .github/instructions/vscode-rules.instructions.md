@@ -83,65 +83,67 @@ Organize or migrate the project toward this structure. Respect anything that
 already exists; adapt paths only when necessary and document deviations.
 
 ```
+
 joe-design-system/
-├── pnpm-workspace.yaml              # Declares workspace packages
-├── turbo.json                        # Turborepo task pipeline
-├── .npmrc                            # pnpm configuration
-├── package.json                      # Root workspace config (no components here)
+├── pnpm-workspace.yaml # Declares workspace packages
+├── turbo.json # Turborepo task pipeline
+├── .npmrc # pnpm configuration
+├── package.json # Root workspace config (no components here)
 ├── .changeset/
-│   └── config.json                   # Changesets versioning config
+│ └── config.json # Changesets versioning config
 ├── tokens/
-│   ├── joe-tokens.json               # Primitives only — from Figma export
-│   ├── semantic/
-│   │   ├── shared.json               # Base semantic tokens (all platforms)
-│   │   ├── consumer.json             # Consumer app semantic overrides
-│   │   ├── merchant.json             # Merchant Manager semantic overrides
-│   │   └── pos.json                  # POS semantic overrides (placeholder)
-│   ├── output/                       # GENERATED — do not hand-edit
-│   │   ├── css/variables.css
-│   │   ├── tailwind/theme.cjs
-│   │   └── rn/tokens.js              # Future
-│   └── README.md
+│ ├── joe-tokens.json # Primitives only — from Figma export
+│ ├── semantic/
+│ │ ├── shared.json # Base semantic tokens (all platforms)
+│ │ ├── consumer.json # Consumer app semantic overrides
+│ │ ├── merchant.json # Merchant Manager semantic overrides
+│ │ └── pos.json # POS semantic overrides (placeholder)
+│ ├── output/ # GENERATED — do not hand-edit
+│ │ ├── css/variables.css
+│ │ ├── tailwind/theme.cjs
+│ │ └── rn/tokens.js # Future
+│ └── README.md
 ├── packages/
-│   ├── merchant-ui/                  # Merchant Manager component library
-│   │   ├── src/
-│   │   │   ├── components/ui/        # React (web) shadcn/Obra components
-│   │   │   └── lib/utils.ts          # cn() helper (imports from shared-utils)
-│   │   ├── .storybook/
-│   │   ├── tailwind.config.cjs       # Extends generated theme
-│   │   ├── tsconfig.json
-│   │   └── package.json
-│   ├── consumer-ui/                  # Consumer app component library
-│   │   ├── src/
-│   │   │   ├── components/ui/        # React Native shadcn-style components
-│   │   │   └── lib/utils.ts
-│   │   ├── .storybook/
-│   │   ├── tailwind.config.cjs
-│   │   └── package.json
-│   ├── pos-ui/                       # POS component library (scaffold only)
-│   │   ├── src/components/ui/        # Empty — placeholder
-│   │   └── package.json
-│   └── shared-utils/                 # Cross-package utilities (no UI)
-│       ├── src/
-│       │   ├── cn.ts                 # clsx + tailwind-merge
-│       │   ├── formatters.ts         # Price, date, currency formatting
-│       │   └── validators.ts         # Shared validation logic
-│       ├── tsconfig.json
-│       └── package.json
+│ ├── merchant-ui/ # Merchant Manager component library
+│ │ ├── src/
+│ │ │ ├── components/ui/ # React (web) shadcn/Obra components
+│ │ │ └── lib/utils.ts # cn() helper (imports from shared-utils)
+│ │ ├── .storybook/
+│ │ ├── tailwind.config.cjs # Extends generated theme
+│ │ ├── tsconfig.json
+│ │ └── package.json
+│ ├── consumer-ui/ # Consumer app component library
+│ │ ├── src/
+│ │ │ ├── components/ui/ # React Native shadcn-style components
+│ │ │ └── lib/utils.ts
+│ │ ├── .storybook/
+│ │ ├── tailwind.config.cjs
+│ │ └── package.json
+│ ├── pos-ui/ # POS component library (scaffold only)
+│ │ ├── src/components/ui/ # Empty — placeholder
+│ │ └── package.json
+│ └── shared-utils/ # Cross-package utilities (no UI)
+│ ├── src/
+│ │ ├── cn.ts # clsx + tailwind-merge
+│ │ ├── formatters.ts # Price, date, currency formatting
+│ │ └── validators.ts # Shared validation logic
+│ ├── tsconfig.json
+│ └── package.json
 ├── scripts/
-│   ├── build-tokens.mjs              # Custom token builder
-│   ├── generate-components.mjs
-│   ├── import-figma-folder.mjs
-│   ├── import-figma-variables.mjs
-│   └── import-obra-tokens.mjs
+│ ├── build-tokens.mjs # Custom token builder
+│ ├── generate-components.mjs
+│ ├── import-figma-folder.mjs
+│ ├── import-figma-variables.mjs
+│ └── import-obra-tokens.mjs
 ├── .github/
-│   ├── instructions/
-│   │   └── vscode-rules.instructions.md
-│   └── workflows/
-│       ├── tokens-sync.yml           # Rebuild tokens on token file changes
-│       └── chromatic.yml             # Visual regression per package
+│ ├── instructions/
+│ │ └── vscode-rules.instructions.md
+│ └── workflows/
+│ ├── tokens-sync.yml # Rebuild tokens on token file changes
+│ └── chromatic.yml # Visual regression per package
 └── docs/
-    └── MIGRATION.md                  # Flat → monorepo migration guide
+└── MIGRATION.md # Flat → monorepo migration guide
+
 ```
 
 ### 3.1 What Lives Where
@@ -181,20 +183,22 @@ Meaningful names that alias primitives. Components consume **only** semantic tok
 #### `shared.json` — Base semantics for all platforms
 
 ```
-color.background.default     → {primitives.colors.white}
-color.background.surface     → {primitives.colors.grey.50}
-color.background.muted       → {primitives.colors.grey.100}
-color.text.primary           → {primitives.colors.black}
-color.text.secondary         → {primitives.colors.grey.600}
-color.text.disabled          → {primitives.colors.grey.400}
-color.action.primary         → {primitives.colors.blue.500}
-color.action.primaryHover    → {primitives.colors.blue.600}
-color.status.success         → {primitives.colors.green.500}
-color.status.warning         → {primitives.colors.yellow.500}
-color.status.error           → {primitives.colors.red.500}
-color.status.info            → {primitives.colors.blue.400}
-color.border.default         → {primitives.colors.grey.200}
-color.border.subtle          → {primitives.colors.grey.100}
+
+color.background.default → {primitives.colors.white}
+color.background.surface → {primitives.colors.grey.50}
+color.background.muted → {primitives.colors.grey.100}
+color.text.primary → {primitives.colors.black}
+color.text.secondary → {primitives.colors.grey.600}
+color.text.disabled → {primitives.colors.grey.400}
+color.action.primary → {primitives.colors.blue.500}
+color.action.primaryHover → {primitives.colors.blue.600}
+color.status.success → {primitives.colors.green.500}
+color.status.warning → {primitives.colors.yellow.500}
+color.status.error → {primitives.colors.red.500}
+color.status.info → {primitives.colors.blue.400}
+color.border.default → {primitives.colors.grey.200}
+color.border.subtle → {primitives.colors.grey.100}
+
 ```
 
 #### `merchant.json` — Overrides for Merchant Manager
@@ -223,10 +227,12 @@ Only tokens that **differ** from `shared.json`. Missing keys fall back to shared
 The build script merges tokens in this order (later wins):
 
 ```
-1. joe-tokens.json      (primitives — base palette)
-2. semantic/shared.json  (base semantic layer)
-3. semantic/<platform>.json  (platform overrides — deep-merged over shared)
-```
+
+1. joe-tokens.json (primitives — base palette)
+2. semantic/shared.json (base semantic layer)
+3. semantic/<platform>.json (platform overrides — deep-merged over shared)
+
+````
 
 This means `merchant.json` only needs to declare the tokens it overrides.
 Everything else inherits from `shared.json`.
@@ -318,7 +324,7 @@ The build script must:
     "release": "turbo run build && changeset publish"
   }
 }
-```
+````
 
 ### 5.4 Turborepo Pipeline (`turbo.json`)
 
@@ -328,29 +334,29 @@ The build script must:
   "tasks": {
     "tokens:build": {
       "inputs": ["tokens/joe-tokens.json", "tokens/semantic/**"],
-      "outputs": ["tokens/output/**"]
+      "outputs": ["tokens/output/**"],
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
     },
     "storybook": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
     },
     "build-storybook": {
       "dependsOn": ["^build"],
-      "outputs": ["storybook-static/**"]
+      "outputs": ["storybook-static/**"],
     },
     "lint": {},
     "chromatic": {
-      "dependsOn": ["build-storybook"]
-    }
-  }
+      "dependsOn": ["build-storybook"],
+    },
+  },
 }
 ```
 
@@ -408,52 +414,52 @@ feel denser and more utilitarian than the consumer app:
     "page-padding": {
       "$value": "{primitives.space.s}",
       "$type": "dimension",
-      "$description": "12px — tighter than consumer's 16px"
+      "$description": "12px — tighter than consumer's 16px",
     },
     "card-padding": {
       "$value": "{primitives.space.m}",
       "$type": "dimension",
-      "$description": "16px"
-    }
+      "$description": "16px",
+    },
   },
   "borderRadius": {
     "card": {
       "$value": "{primitives.radii.xs}",
       "$type": "dimension",
-      "$description": "8px — sharper than consumer's 16px"
+      "$description": "8px — sharper than consumer's 16px",
     },
     "button": {
       "$value": "{primitives.radii.xxs}",
       "$type": "dimension",
-      "$description": "6px"
+      "$description": "6px",
     },
     "input": {
       "$value": "{primitives.radii.xxs}",
       "$type": "dimension",
-      "$description": "6px"
-    }
+      "$description": "6px",
+    },
   },
   "fontSize": {
     "body-default": {
       "$value": "{primitives.fontSizes.body2}",
       "$type": "dimension",
-      "$description": "0.875rem — denser than consumer's body1"
-    }
+      "$description": "0.875rem — denser than consumer's body1",
+    },
   },
   "color": {
     "background": {
       "default": {
         "$value": "{primitives.colors.grey.50}",
         "$type": "color",
-        "$description": "Light grey surface for desktop"
+        "$description": "Light grey surface for desktop",
       },
       "surface": {
         "$value": "{primitives.colors.white}",
         "$type": "color",
-        "$description": "Card/panel background"
-      }
-    }
-  }
+        "$description": "Card/panel background",
+      },
+    },
+  },
 }
 ```
 
@@ -466,7 +472,7 @@ Every component with visual variants follows the CVA pattern. Template:
 
 ```tsx
 // packages/merchant-ui/src/components/ui/button.tsx
-'use client';
+"use client";
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -506,22 +512,30 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, leftIcon, rightIcon, children, ...props }, ref) => (
+  (
+    { className, variant, size, leftIcon, rightIcon, children, ...props },
+    ref,
+  ) => (
     <button
       ref={ref}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
-      {leftIcon && <span className="mr-2 inline-flex shrink-0">{leftIcon}</span>}
+      {leftIcon && (
+        <span className="mr-2 inline-flex shrink-0">{leftIcon}</span>
+      )}
       {children}
-      {rightIcon && <span className="ml-2 inline-flex shrink-0">{rightIcon}</span>}
+      {rightIcon && (
+        <span className="ml-2 inline-flex shrink-0">{rightIcon}</span>
+      )}
     </button>
   ),
 );
@@ -689,12 +703,12 @@ Since the Figma library is the **Obra shadcn/ui kit** (customized for Joe):
 
 ### 13.1 Package Names
 
-| Package        | npm name                    |
-| -------------- | --------------------------- |
-| merchant-ui    | `@joe-coffee/merchant-ui`   |
-| consumer-ui    | `@joe-coffee/consumer-ui`   |
-| pos-ui         | `@joe-coffee/pos-ui`        |
-| shared-utils   | `@joe-coffee/shared-utils`  |
+| Package      | npm name                   |
+| ------------ | -------------------------- |
+| merchant-ui  | `@joe-coffee/merchant-ui`  |
+| consumer-ui  | `@joe-coffee/consumer-ui`  |
+| pos-ui       | `@joe-coffee/pos-ui`       |
+| shared-utils | `@joe-coffee/shared-utils` |
 
 ### 13.2 Versioning with Changesets
 
@@ -707,14 +721,14 @@ Use `@changesets/cli` to manage versions across the monorepo:
 
 ### 13.3 Semantic Versioning Rules
 
-| Change type                         | Version bump |
-| ----------------------------------- | ------------ |
-| Breaking token rename/removal       | **Major**    |
-| Breaking component API change       | **Major**    |
-| New component or token              | **Minor**    |
-| New component variant               | **Minor**    |
-| Bug fix / visual fix                | **Patch**    |
-| Documentation update                | **Patch**    |
+| Change type                   | Version bump |
+| ----------------------------- | ------------ |
+| Breaking token rename/removal | **Major**    |
+| Breaking component API change | **Major**    |
+| New component or token        | **Minor**    |
+| New component variant         | **Minor**    |
+| Bug fix / visual fix          | **Patch**    |
+| Documentation update          | **Patch**    |
 
 ### 13.4 Publishing
 
@@ -789,8 +803,8 @@ Use `package.json` `"exports"` field to define granular entry points:
   "exports": {
     "./button": "./dist/esm/components/ui/button.js",
     "./card": "./dist/esm/components/ui/card.js",
-    "./styles.css": "./dist/styles.css"
-  }
+    "./styles.css": "./dist/styles.css",
+  },
 }
 ```
 
@@ -875,11 +889,14 @@ After migration, update all import paths:
 
 ```tsx
 // Before (flat structure)
-import { cn } from "@/src/lib/utils";
-import { Button } from "@/src/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 // After (monorepo)
 import { cn } from "@joe-coffee/shared-utils";
 import { Button } from "./components/ui/button"; // within same package
 ```
+
+```
+
 ```

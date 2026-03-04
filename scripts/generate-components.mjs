@@ -78,7 +78,7 @@ const COMPONENT_TEMPLATES = {
   'input': (name) => `'use client';
 
 import * as React from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -106,7 +106,7 @@ export { Input };
   'card': (name) => `'use client';
 
 import * as React from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -189,7 +189,7 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
   'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
@@ -228,7 +228,7 @@ export { Badge, badgeVariants };
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 const alertVariants = cva(
   'relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground',
@@ -291,7 +291,7 @@ export { Alert, AlertTitle, AlertDescription };
 import * as React from 'react';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 const labelVariants = cva(
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -316,7 +316,7 @@ export { Label };
   'textarea': (name) => `'use client';
 
 import * as React from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
@@ -344,7 +344,7 @@ export { Textarea };
 
 import * as React from 'react';
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 const Separator = React.forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
@@ -372,7 +372,7 @@ Separator.displayName = SeparatorPrimitive.Root.displayName;
 export { Separator };
 `,
 
-  'skeleton': (name) => `import { cn } from '@/src/lib/utils';
+  'skeleton': (name) => `import { cn } from '@/lib/utils';
 
 function Skeleton({
   className,

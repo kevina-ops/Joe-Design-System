@@ -1,0 +1,4 @@
+{
+  "color": {},
+  "_comment": "Platform-specific semantic overrides. Keys here deep-merge over shared.json."
+}

@@ -11,9 +11,8 @@ const joeTheme = require('./tokens/output/tailwind/theme.cjs');
 module.exports = {
   darkMode: ['class'],
   content: [
-    './src/**/*.{ts,tsx,js,jsx}',
-    './components/**/*.{ts,tsx,js,jsx}',
-    './.storybook/**/*.{js,jsx,mjs,ts,tsx}',
+    './packages/consumer-ui/src/**/*.{ts,tsx,js,jsx}',
+    './packages/consumer-ui/.storybook/**/*.{js,jsx,mjs,ts,tsx}',
   ],
   theme: {
     extend: {
