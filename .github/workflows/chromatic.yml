@@ -1,10 +1,9 @@
 name: Chromatic
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# Chromatic recommends `push` over `pull_request` to avoid ephemeral merge
+# commits that break baseline detection.
+# See: https://www.chromatic.com/docs/github-actions/#recommended-configuration-for-build-events
+on: push
 
 jobs:
   chromatic:
@@ -60,3 +59,6 @@ jobs:
           workingDir: ${{ matrix.package_dir }}
           storybookBuildDir: storybook-static
           onlyChanged: true
+          autoAcceptChanges: "main"
+          externals: "tokens/**"
+          skip: "@(renovate/**|dependabot/**)"
