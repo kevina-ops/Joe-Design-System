@@ -626,16 +626,6 @@ when POS work begins.
 - Publishes to Chromatic for independent visual regression testing.
 - Store `CHROMATIC_PROJECT_TOKEN` as a GitHub Actions secret.
 
-### 9.3 Vercel Deployment
-
-The Storybook deployment to Vercel must be updated for the monorepo:
-
-- Update `vercel.json` to use `pnpm` commands.
-- Build command: `pnpm run tokens:build:merchant && pnpm --filter merchant-ui build-storybook`.
-- Output directory: `packages/merchant-ui/storybook-static`.
-- When multiple Storybooks need hosting, consider separate Vercel projects per
-  package or a unified documentation site.
-
 ---
 
 ## 10. Obra Alignment Rules
@@ -864,7 +854,7 @@ The current repo is a flat single-package structure with components in
    `packages/consumer-ui/` (or `packages/merchant-ui/` depending on which
    platform they serve). Update import paths.
 7. **Create `packages/pos-ui/`** — Scaffold only.
-8. **Update CI/CD** — Update GitHub Actions, Vercel config, Chromatic.
+8. **Update CI/CD** — Update GitHub Actions, Chromatic.
 9. **Update root `package.json`** — Remove component-level deps from root,
    keep only workspace-level tooling.
 10. **Clean up** — Remove `src/` directory from root once all components are
